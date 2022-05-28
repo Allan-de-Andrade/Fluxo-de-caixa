@@ -1,7 +1,9 @@
 package com.soverteria.frimel.business;
 
 import com.soverteria.frimel.modelos.dto.DebitoDTO;
+import com.soverteria.frimel.modelos.dto.EstoqueDTO;
 import com.soverteria.frimel.modelos.entity.Debito;
+import com.soverteria.frimel.modelos.entity.Estoque;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,11 @@ public class DebitoBO {
 
 
     final DebitoRepositorio debitoRepositorio;
+    final EstoqueBO estoqueBO;
 
-    public DebitoBO(DebitoRepositorio debitoRepositorio) {
+    public DebitoBO(DebitoRepositorio debitoRepositorio,EstoqueBO estoqueBO) {
         this.debitoRepositorio = debitoRepositorio;
+        this.estoqueBO = estoqueBO;
     }
 
     public  List<Debito> findAll() {
@@ -31,7 +35,6 @@ public class DebitoBO {
     public Debito save(DebitoDTO debitoDTO) {
 
         if(debitoDTO != null){
-
             Debito debito = new Debito();
 
             debito.setValor(debitoDTO.getValor());
@@ -39,7 +42,9 @@ public class DebitoBO {
             debito.setData(criarLocalDate(debitoDTO.getData()));
             debito.setQuantidade(debitoDTO.getQuantidade());
 
-           return debitoRepositorio.save(debito);
+            debitoRepositorio.save(debito);
+            estoqueBO.subtrairQuantidadeDoProduto(debito);
+            return debito;
         }
 
         return null;
@@ -87,5 +92,4 @@ public class DebitoBO {
         }
         return null;
     }
-
 }

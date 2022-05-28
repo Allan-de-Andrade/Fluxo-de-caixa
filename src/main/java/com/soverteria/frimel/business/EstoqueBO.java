@@ -1,7 +1,10 @@
 package com.soverteria.frimel.business;
 
+import com.soverteria.frimel.modelos.dto.DebitoDTO;
 import com.soverteria.frimel.modelos.dto.EstoqueDTO;
+import com.soverteria.frimel.modelos.entity.Debito;
 import com.soverteria.frimel.modelos.entity.Estoque;
+import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import com.soverteria.frimel.repositorios.EstoqueRepositorio;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +14,11 @@ import java.util.List;
 public class EstoqueBO {
 
     final EstoqueRepositorio estoqueRepositorio;
+    final DebitoRepositorio debitoRepositorio;
 
-    public EstoqueBO(EstoqueRepositorio estoqueRepositorio) {
+    public EstoqueBO(EstoqueRepositorio estoqueRepositorio,DebitoRepositorio debitoRepositorio) {
         this.estoqueRepositorio = estoqueRepositorio;
+        this.debitoRepositorio = debitoRepositorio;
     }
 
     public Estoque save(EstoqueDTO estoqueDTO){
@@ -60,5 +65,25 @@ public class EstoqueBO {
              return estoqueRepositorio.save(estoque);
         }
         return null;
+    }
+
+    /**
+     *  - esse metodo serve para subtrair a quantidade do produto do estoque, com o debito que foi adicionado
+     * @param debito
+     */
+    public void subtrairQuantidadeDoProduto(Debito debito){
+
+        Estoque estoque;
+          for(long id = 1;id <= debitoRepositorio.findAll().size();id++){
+              estoque = estoqueRepositorio.findById(id).get();
+
+              if(debito.getProdutoVendido().equals(estoque.getProduto())){
+
+                  estoque.setProduto(estoque.getProduto());
+                  estoque.setQuantidade(estoque.getQuantidade() - debito.getQuantidade());
+
+                   estoqueRepositorio.save(estoque);
+              }
+          }
     }
 }
