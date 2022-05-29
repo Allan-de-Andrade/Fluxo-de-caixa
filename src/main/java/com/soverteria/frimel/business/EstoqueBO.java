@@ -28,6 +28,7 @@ public class EstoqueBO {
 
          estoque.setProduto(estoqueDTO.getProduto());
          estoque.setQuantidade(estoqueDTO.getQuantidade());
+         estoque.setPreco(estoqueDTO.getPreco());
 
          return estoqueRepositorio.save(estoque);
         }

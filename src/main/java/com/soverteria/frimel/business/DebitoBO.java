@@ -7,6 +7,7 @@ import com.soverteria.frimel.modelos.entity.Estoque;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,15 +33,17 @@ public class DebitoBO {
     public  Debito getOne(Long id) {
         return debitoRepositorio.getOne(id);
     }
-    public Debito save(DebitoDTO debitoDTO) {
+    public Debito save(DebitoDTO debitoDTO,Estoque estoque) {
 
         if(debitoDTO != null){
             Debito debito = new Debito();
 
-            debito.setValor(debitoDTO.getValor());
+            debito.setQuantidade(debitoDTO.getQuantidade());
+            BigDecimal quantidade =  BigDecimal.valueOf(debito.getQuantidade());
+
+            debito.setValor(estoque.getPreco().multiply(quantidade));
             debito.setProdutoVendido(debitoDTO.getProdutoVendido());
             debito.setData(criarLocalDate(debitoDTO.getData()));
-            debito.setQuantidade(debitoDTO.getQuantidade());
 
             debitoRepositorio.save(debito);
             estoqueBO.subtrairQuantidadeDoProduto(debito);
@@ -77,16 +80,18 @@ public class DebitoBO {
             return Boolean.FALSE;
         }
     }
-    public Debito update(Long id,DebitoDTO debitoDTO)
+    public Debito update(Long id,DebitoDTO debitoDTO,Estoque estoque)
     {
         if(id != null) {
 
             Debito debito = getOne(id);
 
+            BigDecimal quantidade =  BigDecimal.valueOf(debito.getQuantidade());
+
             debito.setData(criarLocalDate(debitoDTO.getData()));
             debito.setProdutoVendido(debitoDTO.getProdutoVendido());
-            debito.setValor(debitoDTO.getValor());
             debito.setQuantidade(debitoDTO.getQuantidade());
+            debito.setValor(estoque.getPreco().multiply(quantidade));
 
             return debitoRepositorio.save(debito);
         }

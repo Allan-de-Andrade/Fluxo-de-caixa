@@ -1,5 +1,7 @@
 package com.soverteria.frimel.modelos.dto;
 
+import java.math.BigDecimal;
+
 public class EstoqueDTO {
 
     private Long id;
@@ -7,6 +9,17 @@ public class EstoqueDTO {
     private String produto;
 
     private Integer quantidade;
+
+    private BigDecimal preco;
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public void setPreço(BigDecimal preco) {
+        this.preco = preco;
+    }
+
 
     public Long getId() {
         return id;

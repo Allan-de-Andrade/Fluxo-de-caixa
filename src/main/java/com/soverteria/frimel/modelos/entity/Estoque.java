@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name="estoquetable")
@@ -20,6 +21,18 @@ public class Estoque {
 
     @Column(nullable = false)
     private Integer quantidade;
+
+    @Column(nullable = false)
+    private BigDecimal preco;
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
+
 
     public long getId() {
         return id;

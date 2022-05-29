@@ -10,8 +10,6 @@ public class DebitoDTO {
 
     private String produtoVendido;
 
-    private BigDecimal valor;
-
     private Integer quantidade;
 
     private String data;
@@ -40,14 +38,6 @@ public class DebitoDTO {
 
     public void setProdutoVendido(String produtoVendido) {
         this.produtoVendido = produtoVendido;
-    }
-
-    public BigDecimal getValor() {
-        return valor;
-    }
-
-    public void setValor(BigDecimal valor) {
-        this.valor = valor;
     }
 
     public String getData() {

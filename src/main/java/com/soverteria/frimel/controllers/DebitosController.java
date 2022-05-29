@@ -1,8 +1,10 @@
 package com.soverteria.frimel.controllers;
 
 import com.soverteria.frimel.business.DebitoBO;
+import com.soverteria.frimel.business.EstoqueBO;
 import com.soverteria.frimel.modelos.dto.DebitoDTO;
 import com.soverteria.frimel.modelos.entity.Debito;
+import com.soverteria.frimel.modelos.entity.Estoque;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +15,10 @@ import java.util.List;
 public class DebitosController {
 
     final DebitoBO debitoBO;
-
-    public DebitosController(DebitoBO debitoBO) {
+    final EstoqueBO estoqueBO;
+    public DebitosController(DebitoBO debitoBO,EstoqueBO estoqueBO) {
         this.debitoBO = debitoBO;
+        this.estoqueBO = estoqueBO;
     }
 
 
@@ -33,13 +36,25 @@ public class DebitosController {
         @PutMapping
         public Debito adicionarGanho(@RequestBody DebitoDTO debitoDTO)
         {
-            return debitoBO.save(debitoDTO);
+
+            for(long id = 1;id <= estoqueBO.findAll().size();id++) {
+                Estoque estoque = estoqueBO.getOne(id);
+
+                if (estoque.getProduto().equals(debitoDTO.getProdutoVendido()) && estoque != null)
+                    return debitoBO.save(debitoDTO, estoque);
+
+                else
+                       System.out.println("não existe esse produto no estoque");
+            }
+
+            return  null;
         }
 
         @PostMapping("/{id}")
         public Debito modificarGanho(@PathVariable Long id, @RequestBody DebitoDTO debitoDTO){
 
-            return debitoBO.update(id,debitoDTO);
+            Estoque estoque = estoqueBO.getOne(id);
+            return debitoBO.update(id,debitoDTO,estoque);
         }
 
         @DeleteMapping("/{id}")
