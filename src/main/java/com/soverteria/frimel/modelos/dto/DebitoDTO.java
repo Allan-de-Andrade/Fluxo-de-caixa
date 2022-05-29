@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+/**
+ * esta classe serve para receber os dados do Debito dado pelo usuario
+ */
 public class DebitoDTO {
 
     private  Long id;

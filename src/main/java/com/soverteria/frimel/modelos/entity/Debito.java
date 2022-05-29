@@ -7,6 +7,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * classe que armazena os dados dos Debitos
+ */
 @Entity
 @Table(name = "debitostable")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

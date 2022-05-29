@@ -14,6 +14,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * essa classe gerencia todos os debitos da empresa
+ */
 @Service
 public class DebitoBO {
 
@@ -26,13 +29,29 @@ public class DebitoBO {
         this.estoqueBO = estoqueBO;
     }
 
+    /**
+     * esse metodo serve para mostrar todos os debitos cadastrados
+     * @return
+     */
     public  List<Debito> findAll() {
         return debitoRepositorio.findAll();
     }
 
+    /**
+     *esse metodo serve para pegar um debito atraves do id
+     * @param id
+     * @return
+     */
     public  Debito getOne(Long id) {
         return debitoRepositorio.getOne(id);
     }
+
+    /**
+     * esse metodo serve para registrar um Debito no banco de dados
+     * @param debitoDTO
+     * @param estoque
+     * @return
+     */
     public Debito save(DebitoDTO debitoDTO,Estoque estoque) {
 
         if(debitoDTO != null){
@@ -53,6 +72,11 @@ public class DebitoBO {
         return null;
     }
 
+    /**
+     * esse metodo serve para criar um LocalDateTime
+     * @param data
+     * @return
+     */
     private LocalDateTime criarLocalDate(String data) {
 
         if (data != null) {
@@ -70,6 +94,11 @@ public class DebitoBO {
         return null;
     }
 
+    /**
+     * esse metodo serve para deletar um debito especifico pelo id
+     * @param id
+     * @return
+     */
     public Boolean  deleteById(Long id) {
 
         try {
@@ -80,6 +109,14 @@ public class DebitoBO {
             return Boolean.FALSE;
         }
     }
+
+    /**
+     * esse metodo serve para atualizar um Debito com os dados do usuario
+     * @param id
+     * @param debitoDTO
+     * @param estoque
+     * @return
+     */
     public Debito update(Long id,DebitoDTO debitoDTO,Estoque estoque)
     {
         if(id != null) {

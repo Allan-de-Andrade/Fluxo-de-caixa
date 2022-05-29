@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+/**
+ * Esta classe executa as funções da classe EstoqueBO
+ */
 @RestController
 @RequestMapping("/estoque")
 public class EstoqueController {

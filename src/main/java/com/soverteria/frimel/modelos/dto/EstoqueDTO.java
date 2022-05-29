@@ -2,6 +2,9 @@ package com.soverteria.frimel.modelos.dto;
 
 import java.math.BigDecimal;
 
+/**
+ * esta classe serve para receber os dados do Estoque dado pelo usuario
+ */
 public class EstoqueDTO {
 
     private Long id;

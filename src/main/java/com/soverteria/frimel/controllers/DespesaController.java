@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * esta classe executa os metodos da classe DespesaBO
+ *
+ */
+
 @RestController
 @RequestMapping("/despesas")
 public class DespesaController extends Despesa {

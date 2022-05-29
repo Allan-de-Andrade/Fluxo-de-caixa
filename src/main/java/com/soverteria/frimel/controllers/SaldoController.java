@@ -5,6 +5,10 @@ import com.soverteria.frimel.repositorios.DespesaRepositorio;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+/**
+ * Esta classe gerencia os saldo da empresa
+ */
 @RestController
 @RequestMapping("/saldo")
 public class SaldoController {

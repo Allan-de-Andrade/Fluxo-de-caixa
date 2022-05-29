@@ -12,6 +12,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Esta classe gerencia  todas as despesas da empresa
+ */
 @Service
 public class DespesaBO {
 
@@ -22,14 +25,28 @@ public class DespesaBO {
         this.despesaRepositorio = despesaRepositorio;
     }
 
+    /**
+     * este metodo serve para mostrar todas as despesas
+     * @return
+     */
     public List<Despesa> findAll(){
         return despesaRepositorio.findAll();
     }
 
+    /**
+     * esse metodo serve para pegar a despesa pelo id
+     * @param id
+     * @return
+     */
     public Despesa getOne(Long id){
         return despesaRepositorio.getOne(id);
     }
 
+    /**
+     * esse metodo serve para salvar uma nova despesa
+     * @param despesa
+     * @return
+     */
     public Despesa save(DespesaDTO despesa){
 
         if(despesa != null){
@@ -44,6 +61,13 @@ public class DespesaBO {
 
         return null;
     }
+
+    /**
+     * este metodo serve para atualizar uma despesa
+     * @param id
+     * @param despesaDTO
+     * @return
+     */
    public Despesa update(Long id,DespesaDTO despesaDTO){
 
 
@@ -59,6 +83,11 @@ public class DespesaBO {
      return null;
    }
 
+    /**
+     * este metodo cria um novo LocalDateTime
+     * @param data
+     * @return
+     */
     private LocalDateTime criarLocalDate(String data) {
 
         if(data != null){
@@ -76,6 +105,11 @@ public class DespesaBO {
         return null;
     }
 
+    /**
+     * este metodo deleta uma despesa pelo id
+     * @param id
+     * @return
+     */
     public Boolean deleteById(Long id){
 
         try {

@@ -2,6 +2,9 @@ package com.soverteria.frimel.modelos.dto;
 
 import java.math.BigDecimal;
 
+/**
+ * esta classe serve para receber os dados da Despesa dado pelo usuario
+ */
 public class DespesaDTO {
 
         private Long id;

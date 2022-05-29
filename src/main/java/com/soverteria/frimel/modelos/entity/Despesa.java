@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * classe que gerencia todos os dados da Despesa
+ */
 @Entity
 @Table(name = "despesatable")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * essa classe gerencia os produtos do estoque da empresa
+ */
 @Service
 public class EstoqueBO {
 
@@ -21,6 +24,11 @@ public class EstoqueBO {
         this.debitoRepositorio = debitoRepositorio;
     }
 
+    /**
+     * esse metodo serve para salvar um novo produto no estoque
+     * @param estoqueDTO
+     * @return
+     */
     public Estoque save(EstoqueDTO estoqueDTO){
 
      if(estoqueDTO != null) {
@@ -35,14 +43,28 @@ public class EstoqueBO {
          return null;
     }
 
+    /**
+     * esse metodo serve para pegar todos os produtos do estoque
+     * @return
+     */
     public List<Estoque> findAll(){
         return estoqueRepositorio.findAll();
     }
 
+    /**
+     * esse metodo serve para pegar um produto do estoque pelo id
+     * @param id
+     * @return
+     */
     public Estoque getOne(Long id){
       return estoqueRepositorio.getOne(id);
     }
 
+    /**
+     * esse metodo serve para deletar um produto do estoque pelo id
+     * @param id
+     * @return
+     */
     public Boolean deleteById(Long id){
 
         try {
@@ -54,6 +76,13 @@ public class EstoqueBO {
             return Boolean.FALSE;
         }
     }
+
+    /**
+     *esse metodo serve para atualizar o estoque com os dados do usuario
+     * @param id
+     * @param estoqueDTO
+     * @return
+     */
     public Estoque update(Long id,EstoqueDTO estoqueDTO){
 
         if(id != null){

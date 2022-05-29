@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+/**
+ * esta classe aplica os metodos do DebitoBO
+ */
 @RestController
 @RequestMapping("/debitos")
 public class DebitosController {

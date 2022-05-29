@@ -6,10 +6,13 @@ import org.springframework.stereotype.Controller;
 import javax.persistence.*;
 import java.math.BigDecimal;
 
+/**
+ * esta classe armazena todos os dados do estoque
+ */
+
 @Entity
 @Table(name="estoquetable")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
 public class Estoque {
 
     @Id
