@@ -104,8 +104,8 @@ public class EstoqueBO {
     public void subtrairQuantidadeDoProduto(Debito debito){
 
         Estoque estoque;
-          for(long id = 1;id <= debitoRepositorio.findAll().size();id++){
-              estoque = estoqueRepositorio.findById(id).get();
+          for(long id = 1;id < estoqueRepositorio.findAll().size();id++){
+              estoque = estoqueRepositorio.getOne(id);
 
               if(debito.getProdutoVendido().equals(estoque.getProduto())){
 

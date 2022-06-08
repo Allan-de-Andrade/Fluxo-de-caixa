@@ -121,33 +121,39 @@ public class SaldoBO {
         Debito debito;
         Despesa despesa;
 
-            for (int id = 0; id < despesasSomadas.size() && id < debitosSomados.size(); id++) {
+         if(saldos.size() == 0) {
 
-                despesa = despesasSomadas.get(id);
-                debito = debitosSomados.get(id);
+             for (int id = 0; id < despesasSomadas.size() && id < debitosSomados.size(); id++) {
 
-                Saldo saldo = new Saldo();
+                 despesa = despesasSomadas.get(id);
+                 debito = debitosSomados.get(id);
 
-                if (debito.getData().getYear() == despesa.getData().getYear() && debito.getData().getMonth().equals(despesa.getData().getMonth())) {
+                 Saldo saldo = new Saldo();
 
-                    saldo.setDateTime(criarLocalDateTime(debito, saldo));
-                    saldo.setValor(debito.getValor().subtract(despesa.getValor()));
+                 if (debito.getData().getYear() == despesa.getData().getYear() && debito.getData().getMonth().equals(despesa.getData().getMonth())) {
 
-                    saldos.add(saldo);
-                }
+                     saldo.setDateTime(criarLocalDateTime(debito, saldo));
+                     saldo.setValor(debito.getValor().subtract(despesa.getValor()));
 
-                else {
-                    saldo.setValor(debito.getValor());
-                    saldo.setDateTime(debito.getData());
-                    saldos.add(saldo);
+                     saldos.add(saldo);
+                 }
 
-                    saldo = new Saldo();
+                 else {
+                     saldo.setValor(debito.getValor());
+                     saldo.setDateTime(debito.getData());
+                     saldos.add(saldo);
 
-                    saldo.setValor(despesa.getValor().negate());
-                    saldo.setDateTime(despesa.getData());
-                    saldos.add(saldo);
-                }
-            }
+                     saldo = new Saldo();
+
+                     saldo.setValor(despesa.getValor().negate());
+                     saldo.setDateTime(despesa.getData());
+                     saldos.add(saldo);
+                 }
+             }
+         }
+
+        else
+               atualizarSaldos(saldos,debitosSomados,despesasSomadas);
 
         return saldos;
     }
@@ -166,5 +172,56 @@ public class SaldoBO {
         LocalDateTime dateTime = dataDoSaldo.atTime(horarioCriado);
         saldo.setDateTime(dateTime);
         return saldo.getDateTime();
+    }
+
+    /**
+     * este metodo atualiza a lista de saldos
+     * @param saldos
+     * @param debitosSomados
+     * @param despesasSomadas
+     * @return ArrayList<Saldo>
+     */
+    private ArrayList<Saldo> atualizarSaldos(ArrayList<Saldo> saldos, ArrayList<Debito> debitosSomados, ArrayList<Despesa> despesasSomadas){
+
+        ArrayList<Debito> debitosSomadosAtual = somarDebitos();
+        ArrayList<Despesa> despesasSomadasAtual = somarDespesas();
+
+        Despesa despesaAtual;
+        Debito debitoAtual;
+
+        Debito debitoAntes;
+        Despesa despesaAntes;
+
+        for(int id = 0;id < debitosSomados.size() && id < despesasSomadas.size();id++){
+
+            despesaAtual = despesasSomadasAtual.get(id);
+            despesaAntes = despesasSomadas.get(id);
+
+            debitoAntes = debitosSomados.get(id);
+            debitoAtual = debitosSomadosAtual.get(id);
+
+            Saldo saldo = saldos.get(id);
+
+            if(debitoAntes != debitoAtual && despesaAntes != despesaAtual)
+            {
+                if (debitoAtual.getData().getYear() == despesaAtual.getData().getYear() && debitoAtual.getData().getMonth().equals(despesaAtual.getData().getMonth())) {
+
+                    saldo.setDateTime(criarLocalDateTime(debitoAtual, saldo));
+                    saldo.setValor(debitoAtual.getValor().subtract(despesaAtual.getValor()));
+                }
+
+                else {
+                    saldo.setValor(debitoAtual.getValor());
+                    saldo.setDateTime(debitoAtual.getData());
+
+                    saldo = saldos.get(id + 1);
+
+                    saldo.setValor(despesaAtual.getValor().negate());
+                    saldo.setDateTime(despesaAtual.getData());
+                }
+            }
+        }
+
+        return  saldos;
     }
 }
