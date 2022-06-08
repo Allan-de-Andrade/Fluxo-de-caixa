@@ -101,10 +101,14 @@ public class DebitoBO {
      */
     public Boolean  deleteById(Long id) {
 
+        Debito debito = debitoRepositorio.getOne(id);
+
         try {
+            estoqueBO.aumentarQuantidadeDoProduto(debito);
             debitoRepositorio.deleteById(id);
             return Boolean.TRUE;
         }
+
         catch (Exception e){
             return Boolean.FALSE;
         }
