@@ -14,6 +14,7 @@ import java.util.List;
  * Esta classe executa as funções da classe EstoqueBO
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RequestMapping("/estoque")
 public class EstoqueController {
 
