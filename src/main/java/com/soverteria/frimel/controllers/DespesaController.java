@@ -5,6 +5,7 @@ import com.soverteria.frimel.modelos.entity.Despesa;
 import com.soverteria.frimel.modelos.dto.DespesaDTO;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,8 +14,8 @@ import java.util.List;
  */
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
-@RequestMapping("/despesas")
+@CrossOrigin(origins = "http://192.168.0.106:4200/")
+@RequestMapping("/api/despesas")
 public class DespesaController extends Despesa {
 
         final DespesaBO despesaBo;
@@ -34,6 +35,10 @@ public class DespesaController extends Despesa {
             return despesaBo.getOne(id);
        }
 
+       @GetMapping(value = "/somadas")
+       public ArrayList<Despesa> despesasSomadas(){
+            return despesaBo.addValueOfExpensesByMesAndYear();
+       }
       @PutMapping
       public Despesa adicionarDespesa(@RequestBody DespesaDTO despesas) {
 

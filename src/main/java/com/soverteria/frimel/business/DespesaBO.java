@@ -3,13 +3,16 @@ package com.soverteria.frimel.business;
 import com.soverteria.frimel.modelos.dto.DespesaDTO;
 import com.soverteria.frimel.modelos.entity.Despesa;
 import com.soverteria.frimel.repositorios.DespesaRepositorio;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,6 +64,37 @@ public class DespesaBO {
 
         return null;
     }
+    List<Despesa>despesasOrdenadas;
+    public ArrayList<Despesa>addValueOfExpensesByMesAndYear(){
+
+        Sort ordenar = Sort.by("data").ascending();
+        despesasOrdenadas = despesaRepositorio.findAll(ordenar);
+        ArrayList<Despesa> despesasSomadas = new ArrayList<>();
+        Despesa despesa = despesasOrdenadas.get(0);
+
+        int i = 1;
+        do{
+            Despesa despesaSomar = despesasOrdenadas.get(i);
+
+                if(despesa.getData().getYear() == LocalDate.now().getYear()){
+
+                   if(despesa.getData().getMonth() == despesaSomar.getData().getMonth()) {
+                       despesa.setValor(despesa.getValor().add(despesaSomar.getValor()));
+
+                       if(i + 1 == despesasOrdenadas.size()){
+                           despesasSomadas.add(despesa);
+                       }
+                   }
+                   else if(despesa.getData().getMonth() != despesaSomar.getData().getMonth()) {
+                       despesasSomadas.add(despesa);
+                       despesa = despesaSomar;
+                   }
+                }
+                i++;
+            }
+     while (i < despesasOrdenadas.size());
+        return  despesasSomadas;
+    }
 
     /**
      * este metodo serve para atualizar uma despesa
@@ -92,8 +126,7 @@ public class DespesaBO {
 
         if(data != null){
 
-            DateTimeFormatter parser = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDateTime dateTime = LocalDate.parse(data, parser).atStartOfDay();
+            LocalDateTime dateTime = LocalDate.parse(data).atStartOfDay();
 
             LocalTime horario = LocalTime.now();
             LocalDate date = dateTime.toLocalDate();
