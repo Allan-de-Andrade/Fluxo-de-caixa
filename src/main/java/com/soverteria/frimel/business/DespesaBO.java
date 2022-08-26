@@ -72,25 +72,31 @@ public class DespesaBO {
         ArrayList<Despesa> despesasSomadas = new ArrayList<>();
         Despesa despesa = despesasOrdenadas.get(0);
 
-        int i = 1;
+        int i = 0;
         do{
             Despesa despesaSomar = despesasOrdenadas.get(i);
 
-                if(despesa.getData().getYear() == LocalDate.now().getYear()){
+                if(despesa.getData().getYear() == despesaSomar.getData().getYear()){
 
                    if(despesa.getData().getMonth() == despesaSomar.getData().getMonth()) {
                        despesa.setValor(despesa.getValor().add(despesaSomar.getValor()));
-
-                       if(i + 1 == despesasOrdenadas.size()){
-                           despesasSomadas.add(despesa);
-                       }
                    }
                    else if(despesa.getData().getMonth() != despesaSomar.getData().getMonth()) {
                        despesasSomadas.add(despesa);
                        despesa = despesaSomar;
                    }
                 }
-                i++;
+                else if(despesa.getData().getYear() != despesaSomar.getData().getYear()) {
+                    despesasSomadas.add(despesa);
+                    despesa = despesaSomar;
+
+                }
+                if(i + 1 == despesasOrdenadas.size()){
+                    Despesa ultimaDespesa = despesasOrdenadas.get(i);
+                    despesasSomadas.add(ultimaDespesa);
+                }
+
+                 i++;
             }
      while (i < despesasOrdenadas.size());
         return  despesasSomadas;

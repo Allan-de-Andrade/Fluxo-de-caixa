@@ -13,8 +13,8 @@ import java.util.ArrayList;
  * Esta classe gerencia os metodos do saldo da empresa
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
-@RequestMapping("/saldo")
+@CrossOrigin(origins = "http://192.168.1.197:4200",maxAge = 3600)
+@RequestMapping("/api/saldo")
 public class SaldoController {
 
     final SaldoBO saldoBO;

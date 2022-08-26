@@ -15,8 +15,8 @@ import java.util.List;
  * esta classe aplica os metodos do DebitoBO
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
-@RequestMapping("/debitos")
+@CrossOrigin(origins = "http://192.168.1.197:4200",maxAge = 3600)
+@RequestMapping("/api/debitos")
 public class DebitosController {
 
     final DebitoBO debitoBO;

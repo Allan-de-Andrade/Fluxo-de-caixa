@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 @RestController
-@CrossOrigin(origins = "http://192.168.0.106:4200/")
+@CrossOrigin(origins = "http://192.168.1.197:4200/")
 @RequestMapping("/api/despesas")
 public class DespesaController extends Despesa {
 
