@@ -23,7 +23,7 @@ public class SaldoController {
         this.saldoBO = saldoBO;
     }
 
-    @PutMapping
+    @GetMapping
     public ArrayList<Saldo> gerarSaldo(){
         return saldoBO.criarSaldo();
     }

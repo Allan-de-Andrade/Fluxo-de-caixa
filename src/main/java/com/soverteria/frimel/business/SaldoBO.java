@@ -36,7 +36,7 @@ public class SaldoBO {
     private ArrayList<Despesa> somarDespesas() {
 
         ArrayList<Despesa> despesasSomadas = new ArrayList<Despesa>();
-        Sort ordenar = Sort.by("data").descending();
+        Sort ordenar = Sort.by("data").ascending();
         ;
         List<Despesa> todasAsDespesasOrdenadas = despesaRepositorio.findAll(ordenar);
 
@@ -73,7 +73,7 @@ public class SaldoBO {
     private ArrayList<Debito> somarDebitos() {
 
         ArrayList<Debito> debitosSomados = new ArrayList<Debito>();
-        Sort ordenar = Sort.by("data").descending();
+        Sort ordenar = Sort.by("data").ascending();
         List<Debito> todosOsDebitosOrdenardos = debitoRepositorio.findAll(ordenar);
 
         int id = 0;
@@ -105,7 +105,6 @@ public class SaldoBO {
 
         return debitosSomados;
     }
-
 
     private ArrayList<Saldo> saldos = new ArrayList<Saldo>();
 
@@ -151,9 +150,9 @@ public class SaldoBO {
                  }
              }
          }
-
-        else
-               atualizarSaldos(saldos,debitosSomados,despesasSomadas);
+        else {
+             atualizarSaldos(saldos, debitosSomados, despesasSomadas);
+         }
 
         return saldos;
     }
@@ -224,4 +223,8 @@ public class SaldoBO {
 
         return  saldos;
     }
+
+
+
+
 }

@@ -8,6 +8,7 @@ import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import com.soverteria.frimel.repositorios.EstoqueRepositorio;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -109,16 +110,17 @@ public class EstoqueBO {
     public void subtrairQuantidadeDoProduto(Debito debito) {
 
         Estoque estoque;
-        for (long id = 1; id < estoqueRepositorio.findAll().size(); id++) {
-            estoque = estoqueRepositorio.getOne(id);
+        List<Estoque> produtos =  estoqueRepositorio.findAll();
+        for (int id = 0; id < estoqueRepositorio.findAll().size(); id++) {
+            estoque =  produtos.get(id);
 
             if (debito.getProdutoVendido().equals(estoque.getProduto())) {
 
                 estoque.setProduto(estoque.getProduto());
                 estoque.setQuantidade(estoque.getQuantidade() - debito.getQuantidade());
-
                 estoqueRepositorio.save(estoque);
             }
+
         }
     }
 
@@ -128,11 +130,12 @@ public class EstoqueBO {
      */
     public void aumentarQuantidadeDoProduto(Debito debito) {
         Estoque estoque;
+        List<Estoque> produtos = new ArrayList<>();
+        produtos =  estoqueRepositorio.findAll();
+        for (int id = 0; id < estoqueRepositorio.findAll().size(); id++) {
+            estoque = produtos.get(id);
 
-        for (long id = 1; id < estoqueRepositorio.findAll().size(); id++) {
-            estoque = estoqueRepositorio.getOne(id);
-
-            if (debito.getProdutoVendido().equals(estoque.getProduto())) {
+             if (debito.getProdutoVendido().equals(estoque.getProduto())) {
 
                 estoque.setProduto(estoque.getProduto());
                 estoque.setQuantidade(estoque.getQuantidade() + debito.getQuantidade());

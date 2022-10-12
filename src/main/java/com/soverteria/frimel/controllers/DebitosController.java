@@ -8,6 +8,7 @@ import com.soverteria.frimel.modelos.entity.Estoque;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,10 +28,15 @@ public class DebitosController {
     }
 
 
-    @GetMapping
+        @GetMapping
         public List<Debito> pegarTodosOsDados()
         {
             return  debitoBO.findAll();
+        }
+
+        @GetMapping("/somados")
+        public ArrayList<Debito> debitosSomados(){
+            return debitoBO.addValueOfSalesByMesAndYear();
         }
 
         @GetMapping(value = "/{id}")
@@ -41,9 +47,9 @@ public class DebitosController {
         @PutMapping
         public Debito adicionarGanho(@RequestBody DebitoDTO debitoDTO)
         {
-
-            for(long id = 1;id <= estoqueBO.findAll().size();id++) {
-                Estoque estoque = estoqueBO.getOne(id);
+             List<Estoque> produtos = estoqueBO.findAll();
+            for(int id = 0;id <= estoqueBO.findAll().size();id++) {
+                Estoque estoque =produtos.get(id);
 
                 if (estoque.getProduto().equals(debitoDTO.getProdutoVendido()) && estoque != null)
                     return debitoBO.save(debitoDTO, estoque);
@@ -58,13 +64,23 @@ public class DebitosController {
         @PostMapping("/{id}")
         public Debito modificarGanho(@PathVariable Long id, @RequestBody DebitoDTO debitoDTO){
 
-            Estoque estoque = estoqueBO.getOne(id);
-            return debitoBO.update(id,debitoDTO,estoque);
+            Estoque produto = new Estoque();
+            List<Estoque> produtos = estoqueBO.findAll();
+
+            for(int idProduto = 0;idProduto < produtos.size();idProduto++) {
+                produto = produtos.get(idProduto);
+
+                if (!debitoDTO.getProdutoVendido().equals(produto.getProduto()) && produto == null){
+                    produto = null;
+                }
+            }
+
+            return debitoBO.update(id,debitoDTO,produto);
         }
 
         @DeleteMapping("/{id}")
         public void deletarGanho(@PathVariable Long id){
-        debitoBO.deleteById(id);
+           debitoBO.deleteById(id);
         }
 
     }
