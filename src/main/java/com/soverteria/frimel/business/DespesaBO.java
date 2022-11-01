@@ -3,6 +3,7 @@ package com.soverteria.frimel.business;
 import com.soverteria.frimel.modelos.dto.DespesaDTO;
 import com.soverteria.frimel.modelos.entity.Despesa;
 import com.soverteria.frimel.repositorios.DespesaRepositorio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,13 +22,8 @@ import java.util.List;
 @Service
 public class DespesaBO {
 
-    final DespesaRepositorio despesaRepositorio;
-
-    public DespesaBO(DespesaRepositorio despesaRepositorio) {
-
-        this.despesaRepositorio = despesaRepositorio;
-    }
-
+    @Autowired
+     DespesaRepositorio despesaRepositorio;
     /**
      * este metodo serve para mostrar todas as despesas
      * @return

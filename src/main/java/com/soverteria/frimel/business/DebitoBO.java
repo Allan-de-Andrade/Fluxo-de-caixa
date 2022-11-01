@@ -4,7 +4,9 @@ import com.soverteria.frimel.modelos.dto.DebitoDTO;
 import com.soverteria.frimel.modelos.entity.Debito;
 import com.soverteria.frimel.modelos.entity.Estoque;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,16 +20,12 @@ import java.util.List;
  * essa classe gerencia todos os debitos da empresa
  */
 @Service
-public class DebitoBO {
+public class DebitoBO  {
 
-
-    final DebitoRepositorio debitoRepositorio;
-    final EstoqueBO estoqueBO;
-
-    public DebitoBO(DebitoRepositorio debitoRepositorio, EstoqueBO estoqueBO) {
-        this.debitoRepositorio = debitoRepositorio;
-        this.estoqueBO = estoqueBO;
-    }
+     @Autowired
+     DebitoRepositorio debitoRepositorio;
+     @Autowired
+     EstoqueBO estoqueBO;
 
     /**
      * esse metodo serve para mostrar todos os debitos cadastrados
@@ -80,12 +78,28 @@ public class DebitoBO {
         return null;
     }
 
+
+    public Boolean deleteById(Long id) {
+
+        try {
+            Debito debito = debitoRepositorio.findById(id).get();
+            estoqueBO.aumentarQuantidadeDoProduto(debito);
+            debitoRepositorio.deleteById(id);
+            return Boolean.TRUE;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return Boolean.FALSE;
+        }
+    }
+
     /**
      * esse metodo serve para criar um LocalDateTime
      *
      * @param data
      * @return
      */
+
     private LocalDateTime criarLocalDate(String data) {
 
         if (data != null) {
@@ -108,18 +122,7 @@ public class DebitoBO {
      * @param id
      * @return
      */
-    public Boolean deleteById(Long id) {
 
-        try {
-            Debito debito = debitoRepositorio.findById(id).get();
-            estoqueBO.aumentarQuantidadeDoProduto(debito);
-            debitoRepositorio.deleteById(id);
-            return Boolean.TRUE;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Boolean.FALSE;
-        }
-    }
 
     /**
      * esse metodo serve para atualizar um Debito com os dados do usuario
@@ -129,6 +132,7 @@ public class DebitoBO {
      * @param estoque
      * @return
      */
+
     public Debito update(Long id, DebitoDTO debitoDTO, Estoque estoque) {
         Debito debito = new Debito();
 

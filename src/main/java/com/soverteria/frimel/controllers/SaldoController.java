@@ -4,6 +4,8 @@ import com.soverteria.frimel.business.SaldoBO;
 import com.soverteria.frimel.modelos.dto.Saldo;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import com.soverteria.frimel.repositorios.DespesaRepositorio;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,7 +26,13 @@ public class SaldoController {
     }
 
     @GetMapping
-    public ArrayList<Saldo> gerarSaldo(){
-        return saldoBO.criarSaldo();
+    public ResponseEntity gerarSaldo(){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(saldoBO.criarSaldo());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu uma falha no servidor ao tentar criar o seu saldo");
+        }
     }
 }

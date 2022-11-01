@@ -6,6 +6,7 @@ import com.soverteria.frimel.modelos.entity.Debito;
 import com.soverteria.frimel.modelos.entity.Estoque;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import com.soverteria.frimel.repositorios.EstoqueRepositorio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,13 +18,10 @@ import java.util.List;
 @Service
 public class EstoqueBO {
 
-    final EstoqueRepositorio estoqueRepositorio;
-    final DebitoRepositorio debitoRepositorio;
-
-    public EstoqueBO(EstoqueRepositorio estoqueRepositorio, DebitoRepositorio debitoRepositorio) {
-        this.estoqueRepositorio = estoqueRepositorio;
-        this.debitoRepositorio = debitoRepositorio;
-    }
+    @Autowired
+     EstoqueRepositorio estoqueRepositorio;
+    @Autowired
+     DebitoRepositorio debitoRepositorio;
 
     /**
      * esse metodo serve para salvar um novo produto no estoque

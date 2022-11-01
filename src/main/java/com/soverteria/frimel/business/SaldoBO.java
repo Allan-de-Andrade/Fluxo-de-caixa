@@ -6,6 +6,7 @@ import com.soverteria.frimel.modelos.entity.Despesa;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import com.soverteria.frimel.repositorios.DespesaRepositorio;
 import net.bytebuddy.TypeCache;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +22,11 @@ import java.util.*;
 @Service
 public class SaldoBO {
 
-    final DespesaRepositorio despesaRepositorio;
-    final DebitoRepositorio debitoRepositorio;
+    @Autowired
+   DespesaRepositorio despesaRepositorio;
+    @Autowired
+    DebitoRepositorio debitoRepositorio;
 
-    public SaldoBO(DespesaRepositorio despesaRepositorio, DebitoRepositorio debitoRepositorio) {
-        this.despesaRepositorio = despesaRepositorio;
-        this.debitoRepositorio = debitoRepositorio;
-    }
 
     /**
      * Este metodo serve para somar todas as Despesas e guardar em um ArrayList
