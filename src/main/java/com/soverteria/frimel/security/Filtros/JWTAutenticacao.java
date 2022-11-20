@@ -2,9 +2,14 @@ package com.soverteria.frimel.security.Filtros;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.soverteria.frimel.business.UsuarioBO;
+import com.soverteria.frimel.modelos.entity.Autoridade;
 import com.soverteria.frimel.modelos.entity.Usuario;
+import com.soverteria.frimel.repositorios.UsuarioRepositorio;
 import com.soverteria.frimel.security.UsuarioDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +22,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -24,7 +31,7 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
-    public JWTAutenticacao(AuthenticationManager authenticationManager) {
+     public JWTAutenticacao(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
 
         setFilterProcessesUrl("/api/usuario/login");
@@ -32,10 +39,12 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
         try {
             Usuario usuario = new ObjectMapper().readValue(request.getInputStream(),Usuario.class);
-
-           return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(usuario.getUsername(),usuario.getSenha(),usuario.getAutoridade()));
+            return authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getSenha(), usuario.getAutoridade())
+            );
         }
         catch (IOException e){
             e.printStackTrace();
@@ -55,6 +64,10 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
                withExpiresAt(new Date(System.currentTimeMillis() + 900_000)).
                withClaim("autoridades",usuarioDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())).sign(algorithm);
 
-       response.setHeader("Authorization", token_acesso);
+        String token_refresh = JWT.create().withSubject(usuarioDetails.getUsername()).withIssuer(request.getRequestURL().toString()).
+                withExpiresAt(new Date(System.currentTimeMillis() + 180_000)).sign(algorithm);
+
+       response.setHeader("token_acesso", token_acesso);
+       response.setHeader("token_refresh",token_refresh);
     }
 }

@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(HttpMethod.PUT,"/api/usuario/cadastro");
+        web.ignoring().antMatchers(HttpMethod.PUT,"/api/usuario/cadastro","/api/usuario/recarregarToken");
     }
 
     @Bean

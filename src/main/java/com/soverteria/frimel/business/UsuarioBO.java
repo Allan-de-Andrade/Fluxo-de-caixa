@@ -21,10 +21,15 @@ import java.util.List;
 @ComponentScan(basePackageClasses={UsuarioController.class, UsuarioBO.class})
 public class UsuarioBO  {
 
-    @Autowired
-    UsuarioRepositorio usuarioRepositorio;
-    @Autowired
-    AutoridadeRepositorio autoridadeRepositorio;
+    final UsuarioRepositorio usuarioRepositorio;
+    final AutoridadeRepositorio autoridadeRepositorio;
+
+
+    public UsuarioBO(UsuarioRepositorio usuarioRepositorio,AutoridadeRepositorio autoridadeRepositorio) {
+        this.usuarioRepositorio = usuarioRepositorio;
+        this.autoridadeRepositorio = autoridadeRepositorio;
+    }
+
 
     @Bean
     private PasswordEncoder criptografarDado(){
@@ -36,6 +41,9 @@ public class UsuarioBO  {
     }
 
 
+    public Usuario pegarUsuarioPeloNome(String username){
+        return  usuarioRepositorio.findByUsername(username);
+    }
     public Usuario salvar(UsuarioDTO usuarioDTO){
 
         Usuario usuario = new Usuario();
@@ -60,7 +68,7 @@ public class UsuarioBO  {
 
         Usuario usuario = usuarioRepositorio.getOne(id);
          if(usuarioDTO != null){
-             usuario.setUsername(usuarioDTO.getUsername());
+             usuario.setUsername(criptografarDado().encode(usuarioDTO.getUsername()));
              usuario.setSenha(criptografarDado().encode(usuarioDTO.getSenha()));
              usuario.setFotoUsuario(usuario.getFotoUsuario());
          }
@@ -83,4 +91,5 @@ public class UsuarioBO  {
   public Usuario pegarUsuarioPeloId(long id){
     return usuarioRepositorio.getOne(id);
   }
+
 }
