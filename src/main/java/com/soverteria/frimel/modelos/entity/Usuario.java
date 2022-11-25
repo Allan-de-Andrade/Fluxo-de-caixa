@@ -2,14 +2,14 @@ package com.soverteria.frimel.modelos.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import com.soverteria.frimel.modelos.dto.UsuarioDTO;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 @Entity
 @Table(name = "UsuarioTable", uniqueConstraints = {
@@ -36,6 +36,16 @@ public class Usuario implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Autoridade> autoridade = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private ArrayList<Despesa> dadosDespesa = new ArrayList<Despesa>() {
+    };
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private ArrayList<Debito> dadosDebito;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Estoque> dadosEstoque;
 
     public long getId() {
         return id;
@@ -75,6 +85,24 @@ public class Usuario implements Serializable {
 
     public void setAutoridade(Collection<Autoridade> autoridade) {
         this.autoridade = autoridade;
+    }
+
+    public List<Despesa> getDadosDespesa() {
+        return dadosDespesa;
+    }
+
+
+    public List<Debito> getDadosDebito() {
+        return dadosDebito;
+    }
+
+
+    public List<Estoque> getDadosEstoque() {
+        return dadosEstoque;
+    }
+
+    public void setDadosEstoque(List<Estoque> dadosEstoque) {
+        this.dadosEstoque = dadosEstoque;
     }
 }
 
