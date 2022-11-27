@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    public static final  Usuario usuario = new Usuario();
 
      public JWTAutenticacao(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -43,12 +42,6 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
 
         try {
             Usuario usuario = new ObjectMapper().readValue(request.getInputStream(),Usuario.class);
-
-            this.usuario.setUsername(usuario.getUsername());;
-            this.usuario.setAutoridade(usuario.getAutoridade());
-            this.usuario.setSenha(usuario.getSenha());
-            this.usuario.setFotoUsuario(usuario.getFotoUsuario());
-
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getSenha(), usuario.getAutoridade())
             );

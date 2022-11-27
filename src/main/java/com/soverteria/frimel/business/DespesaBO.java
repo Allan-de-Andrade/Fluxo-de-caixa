@@ -1,21 +1,19 @@
 package com.soverteria.frimel.business;
 
 import com.soverteria.frimel.modelos.dto.DespesaDTO;
-import com.soverteria.frimel.modelos.dto.UsuarioDTO;
 import com.soverteria.frimel.modelos.entity.Despesa;
-import com.soverteria.frimel.modelos.entity.Usuario;
 import com.soverteria.frimel.repositorios.DespesaRepositorio;
-import com.soverteria.frimel.repositorios.UsuarioRepositorio;
-import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -26,12 +24,6 @@ public class DespesaBO {
 
     @Autowired
      DespesaRepositorio despesaRepositorio;
-
-    @Autowired
-    UsuarioRepositorio usuarioRepositorio;
-
-    Usuario usuario = JWTAutenticacao.usuario;
-
     /**
      * este metodo serve para mostrar todas as despesas
      * @return
@@ -63,9 +55,6 @@ public class DespesaBO {
             despesas.setValor(despesa.getValor());
             despesas.setData(criarLocalDate(despesa.getData()));
 
-            usuario.getDadosDespesa().add(despesas);
-            usuarioRepositorio.save(usuario);
-
             return despesaRepositorio.save(despesas);
         }
 
@@ -75,9 +64,7 @@ public class DespesaBO {
     public ArrayList<Despesa>addValueOfExpensesByMesAndYear(){
 
         Sort ordenar = Sort.by("data").ascending();
-        despesasOrdenadas = usuario.getDadosDespesa();
-        despesasOrdenadas.sort(Comparator.comparing(Despesa::getData));
-
+        despesasOrdenadas = despesaRepositorio.findAll(ordenar);
         ArrayList<Despesa> despesasSomadas = new ArrayList<>();
         Despesa despesa = despesasOrdenadas.get(0);
 
@@ -113,30 +100,24 @@ public class DespesaBO {
 
     /**
      * este metodo serve para atualizar uma despesa
+     * @param id
      * @param despesaDTO
      * @return
      */
-   public Despesa update(DespesaDTO despesaDTO){
+   public Despesa update(Long id,DespesaDTO despesaDTO){
 
 
-
-         Despesa despesa = despesaRepositorio.findByDescricao();
+     if(id != null) {
+         Despesa despesa = getOne(id);
 
          despesa.setDescricao(despesaDTO.getDescricao());
          despesa.setData(criarLocalDate(despesaDTO.getData()));
          despesa.setValor(despesaDTO.getValor());
 
-         for(int i = 0;i < usuario.getDadosDespesa().size(); i++){
-
-             if(usuario.getDadosDespesa().get(i).getDescricao().equals(despesa.getDescricao())){
-                 usuario.getDadosDespesa().set(i,despesa);
-             }
-         }
-
-         usuarioRepositorio.save(usuario);
-         return despesaRepositorio.save(despesa);
+         despesaRepositorio.save(despesa);
+     }
+     return null;
    }
-
 
     /**
      * este metodo cria um novo LocalDateTime
@@ -167,13 +148,8 @@ public class DespesaBO {
     public Boolean deleteById(Long id){
 
         try {
-             Despesa despesa = getOne(id);
-
-             for(int i = 0;i < usuario.getDadosDespesa().size();i++) {
-                 usuario.getDadosDespesa().set(i, despesa);
-             }
-             
             despesaRepositorio.deleteById(id);
+
             return  Boolean.TRUE;
         }
         catch (Exception e) {

@@ -133,7 +133,7 @@ public class UsuarioController {
 
                 String token_acesso = JWT.create().withSubject(usuario.getUsername()).withIssuer(request.getRequestURL().toString()).
                         withExpiresAt(new Date(System.currentTimeMillis() + 900_000)).
-                         withClaim("autoridades", usuario.getAutoridade().stream().map(Autoridade::getNome).collect(Collectors.toList())).sign(algorithm);
+                        withClaim("autoridades", usuario.getAutoridade().stream().map(Autoridade::getNome).collect(Collectors.toList())).sign(algorithm);
 
                 response.setHeader("token_acesso", token_acesso);
             }

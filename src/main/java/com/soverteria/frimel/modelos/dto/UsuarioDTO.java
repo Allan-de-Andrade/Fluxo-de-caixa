@@ -1,11 +1,6 @@
 package com.soverteria.frimel.modelos.dto;
 
-import com.soverteria.frimel.modelos.entity.Debito;
-import com.soverteria.frimel.modelos.entity.Despesa;
-import com.soverteria.frimel.modelos.entity.Estoque;
-
 import java.util.Collection;
-import java.util.List;
 
 public class UsuarioDTO {
 
@@ -15,6 +10,12 @@ public class UsuarioDTO {
     private String senha;
     private String fotoUsuario;
 
+    public UsuarioDTO(String username, String senha, String fotoUsuario) {
+        this.id = id;
+        this.username = username;
+        this.senha = senha;
+        this.fotoUsuario = fotoUsuario;
+    }
 
     public String getFotoUsuario() {
         return fotoUsuario;
