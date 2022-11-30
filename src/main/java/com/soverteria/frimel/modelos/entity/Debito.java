@@ -19,6 +19,9 @@ public class Debito {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
+    private String proprietario;
+
     @Column(nullable = false,length = 100)
     private String produtoVendido;
 
@@ -47,6 +50,14 @@ public class Debito {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getProprietario() {
+        return proprietario;
+    }
+
+    public void setProprietario(String proprietario) {
+        this.proprietario = proprietario;
     }
 
     public String getProdutoVendido() {

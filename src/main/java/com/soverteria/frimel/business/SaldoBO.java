@@ -87,7 +87,6 @@ public class SaldoBO {
 
                 debito.setValor(debito.getValor().add(debitoComparado.getValor()));
 
-
                 if (debitoRepositorio.findAll().contains(debito.getData().getMonth()) == false && debitoRepositorio.findAll().contains(debito.getData().getYear()) == false) {
                     debitosSomados.add(debito);
                 }

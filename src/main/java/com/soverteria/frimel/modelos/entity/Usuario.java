@@ -35,6 +35,7 @@ public class Usuario implements Serializable {
     private String fotoUsuario;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY )
     private Collection<Autoridade> autoridade = new ArrayList<>();
 
     public long getId() {

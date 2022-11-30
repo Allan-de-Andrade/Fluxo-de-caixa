@@ -65,7 +65,7 @@ public class DespesaController extends Despesa {
 
            catch (Exception e) {
                e.printStackTrace();
-               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro 500: Ocorreu um erro ao tentar salvar o usuario");
+               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro 500: Ocorreu um erro ao tentar acessar suas despesas somadas");
            }
        }
 

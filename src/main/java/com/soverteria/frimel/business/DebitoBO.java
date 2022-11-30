@@ -3,7 +3,9 @@ package com.soverteria.frimel.business;
 import com.soverteria.frimel.modelos.dto.DebitoDTO;
 import com.soverteria.frimel.modelos.entity.Debito;
 import com.soverteria.frimel.modelos.entity.Estoque;
+import com.soverteria.frimel.modelos.entity.Usuario;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
+import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
@@ -27,13 +29,23 @@ public class DebitoBO  {
      @Autowired
      EstoqueBO estoqueBO;
 
+     Usuario usuario = JWTAutenticacao.usuario;
     /**
      * esse metodo serve para mostrar todos os debitos cadastrados
      *
      * @return
      */
     public List<Debito> findAll() {
-        return debitoRepositorio.findAll();
+        List<Debito> debitosDoProprietario = new ArrayList<>();
+
+        for(int id  = 0;id < debitoRepositorio.findAll().size();id++){
+            Debito debito = debitoRepositorio.findAll().get(id);
+
+            if(debito.getProprietario().equals(usuario.getUsername())){
+                debitosDoProprietario.add(debito);
+            }
+        }
+        return debitosDoProprietario;
     }
 
     /**
@@ -66,6 +78,7 @@ public class DebitoBO  {
             debito.setQuantidade(debitoDTO.getQuantidade());
             BigDecimal quantidade = BigDecimal.valueOf(debito.getQuantidade());
 
+            debito.setProprietario(usuario.getUsername());
             debito.setValor(estoque.getPreco().multiply(quantidade));
             debito.setProdutoVendido(debitoDTO.getProdutoVendido());
             debito.setData(criarLocalDate(debitoDTO.getData()));
@@ -165,54 +178,41 @@ public class DebitoBO  {
 
     public ArrayList<Debito> addValueOfSalesByMesAndYear() {
 
-        Sort ordernarProdutos = Sort.by("produtoVendido").ascending();
-        debitosOrdenados = debitoRepositorio.findAll(ordernarProdutos);
+
+        Sort ordenar = Sort.by("data").ascending();
+        debitosOrdenados = debitoRepositorio.findAll(ordenar);
         ArrayList<Debito> debitosSomados = new ArrayList<>();
-        Debito debito = new Debito();
+        Debito debito= debitosOrdenados.get(0);
 
-        if (debitosOrdenados.size() > 1) {
-            debito = debitosOrdenados.get(0);
+        int i = 1;
+        do{
+            Debito debitoSomar = debitosOrdenados.get(i);
 
+            if(debito.getData().getYear() == debitoSomar.getData().getYear() && debitoSomar.getProprietario().equals(usuario.getUsername()) && debito.getProprietario().equals(usuario.getUsername())){
 
-            int i = 1;
-
-            do {
-                Debito debitoSomar = debitosOrdenados.get(i);
-
-
-                if (debito.getData().getMonth() == debitoSomar.getData().getMonth() && debito.getData().getYear() == debitoSomar.getData().getYear() && debito.getProdutoVendido().equals(debitoSomar.getProdutoVendido())) {
-                    debito.setQuantidade(debito.getQuantidade() + debitoSomar.getQuantidade());
-
+                if(debito.getData().getMonth() == debitoSomar.getData().getMonth()) {
+                    debito.setValor(debito.getValor().add(debitoSomar.getValor()));
                 }
-
-                if (debito.getData().getMonth() != debitoSomar.getData().getMonth() && debito.getData().getYear() != debitoSomar.getData().getYear() || !debito.getProdutoVendido().equals(debitoSomar.getProdutoVendido())) {
+                else if(debito.getData().getMonth() != debitoSomar.getData().getMonth()) {
                     debitosSomados.add(debito);
                     debito = debitoSomar;
                 }
-
-
-                if (i + 1 == debitosOrdenados.size()) {
-                    Debito ultimoDebito = debitosOrdenados.get(i);
-                    debitosSomados.add(debito);
-                }
-
-                i++;
             }
 
+            if(debito.getData().getYear() != debitoSomar.getData().getYear() || debito.getData().getMonth() != debitoSomar.getData().getMonth()){
+                debitosSomados.add(debitoSomar);
+            }
+            if(debito.getProprietario().equals(debitoSomar.getProprietario())){
+                debitosSomados.add(debito);
+            }
 
-            while (i < debitosOrdenados.size());
-            return debitosSomados;
-        }
+            if(i + 1 == debitosOrdenados.size() && debitoSomar.getProprietario().equals(usuario.getUsername())){
+                debitosSomados.add(debitoSomar);
+            }
 
-        else if (debitosOrdenados.size() == 1) {
-            debito = debitosOrdenados.get(0);
-            debitosSomados.add(debito);
-            return debitosSomados;
+            i++;
         }
-
-        else {
-            System.out.println("não há nenhum produto para somar");
-            return null;
-        }
+        while (i < debitosOrdenados.size());
+        return  debitosSomados;
     }
 }

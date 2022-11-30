@@ -1,6 +1,7 @@
 package com.soverteria.frimel.modelos.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,6 +20,10 @@ public class Despesa implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String proprietario;
+
     @Column(nullable = false,length = 70)
     private String descrição;
 
@@ -34,6 +39,14 @@ public class Despesa implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getProprietario() {
+        return proprietario;
+    }
+
+    public void setProprietario(String proprietario) {
+        this.proprietario = proprietario;
     }
 
     public String getDescricao() {

@@ -2,7 +2,9 @@ package com.soverteria.frimel.business;
 
 import com.soverteria.frimel.modelos.dto.DespesaDTO;
 import com.soverteria.frimel.modelos.entity.Despesa;
+import com.soverteria.frimel.modelos.entity.Usuario;
 import com.soverteria.frimel.repositorios.DespesaRepositorio;
+import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,23 @@ public class DespesaBO {
 
     @Autowired
      DespesaRepositorio despesaRepositorio;
+
+    Usuario usuario = JWTAutenticacao.usuario;
     /**
      * este metodo serve para mostrar todas as despesas
      * @return
      */
     public List<Despesa> findAll(){
-        return despesaRepositorio.findAll();
+        List<Despesa> despesasDoProprietario = new ArrayList<>();
+
+        for(int id  = 0;id < despesaRepositorio.findAll().size();id++){
+            Despesa despesa = despesaRepositorio.findAll().get(id);
+
+            if(despesa.getProprietario().equals(usuario.getUsername())){
+                despesasDoProprietario.add(despesa);
+            }
+        }
+        return despesasDoProprietario;
     }
 
     /**
@@ -43,23 +56,25 @@ public class DespesaBO {
 
     /**
      * esse metodo serve para salvar uma nova despesa
-     * @param despesa
+     * @param despesaDTO
      * @return
      */
-    public Despesa save(DespesaDTO despesa){
+    public Despesa save(DespesaDTO despesaDTO){
 
-        if(despesa != null){
-            Despesa despesas = new Despesa();
+        if(despesaDTO != null){
+            Despesa despesa = new Despesa();
 
-            despesas.setDescricao(despesa.getDescricao());
-            despesas.setValor(despesa.getValor());
-            despesas.setData(criarLocalDate(despesa.getData()));
+            despesa.setProprietario(usuario.getUsername());
+            despesa.setDescricao(despesaDTO.getDescricao());
+            despesa.setValor(despesaDTO.getValor());
+            despesa.setData(criarLocalDate(despesaDTO.getData()));
 
-            return despesaRepositorio.save(despesas);
+            return despesaRepositorio.save(despesa);
         }
 
         return null;
     }
+
     List<Despesa>despesasOrdenadas;
     public ArrayList<Despesa>addValueOfExpensesByMesAndYear(){
 
@@ -68,11 +83,11 @@ public class DespesaBO {
         ArrayList<Despesa> despesasSomadas = new ArrayList<>();
         Despesa despesa = despesasOrdenadas.get(0);
 
-        int i = 0;
+        int i = 1;
         do{
             Despesa despesaSomar = despesasOrdenadas.get(i);
 
-                if(despesa.getData().getYear() == despesaSomar.getData().getYear()){
+                if(despesa.getData().getYear() == despesaSomar.getData().getYear() && despesa.getProprietario().equals(usuario.getUsername()) && despesaSomar.getProprietario().equals(usuario.getUsername())){
 
                    if(despesa.getData().getMonth() == despesaSomar.getData().getMonth()) {
                        despesa.setValor(despesa.getValor().add(despesaSomar.getValor()));
@@ -87,15 +102,14 @@ public class DespesaBO {
                     despesa = despesaSomar;
 
                 }
-                if(i + 1 == despesasOrdenadas.size()){
-                    Despesa ultimaDespesa = despesasOrdenadas.get(i);
-                    despesasSomadas.add(ultimaDespesa);
+                if(i + 1 == despesasOrdenadas.size() && usuario.getUsername().equals(despesa.getProprietario())){
+                    despesasSomadas.add(despesa);
                 }
 
                  i++;
             }
      while (i < despesasOrdenadas.size());
-        return  despesasSomadas;
+         return  despesasSomadas;
     }
 
     /**

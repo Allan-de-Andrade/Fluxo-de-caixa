@@ -1,11 +1,12 @@
 package com.soverteria.frimel.business;
 
-import com.soverteria.frimel.modelos.dto.DebitoDTO;
 import com.soverteria.frimel.modelos.dto.EstoqueDTO;
 import com.soverteria.frimel.modelos.entity.Debito;
 import com.soverteria.frimel.modelos.entity.Estoque;
+import com.soverteria.frimel.modelos.entity.Usuario;
 import com.soverteria.frimel.repositorios.DebitoRepositorio;
 import com.soverteria.frimel.repositorios.EstoqueRepositorio;
+import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,13 @@ import java.util.List;
 @Service
 public class EstoqueBO {
 
-    @Autowired
      EstoqueRepositorio estoqueRepositorio;
-    @Autowired
-     DebitoRepositorio debitoRepositorio;
 
+    public EstoqueBO(EstoqueRepositorio estoqueRepositorio, DebitoRepositorio debitoRepositorio) {
+        this.estoqueRepositorio = estoqueRepositorio;
+    }
+
+    Usuario usuario = JWTAutenticacao.usuario;
     /**
      * esse metodo serve para salvar um novo produto no estoque
      *
@@ -34,6 +37,7 @@ public class EstoqueBO {
         if (estoqueDTO != null) {
             Estoque estoque = new Estoque();
 
+            estoque.setProprietario(usuario.getUsername());
             estoque.setProduto(estoqueDTO.getProduto());
             estoque.setQuantidade(estoqueDTO.getQuantidade());
             estoque.setPreco(estoqueDTO.getPreco());
@@ -49,7 +53,16 @@ public class EstoqueBO {
      * @return
      */
     public List<Estoque> findAll() {
-        return estoqueRepositorio.findAll();
+        List<Estoque> estoqueDoProprietario = new ArrayList<>();
+
+        for(int id  = 0;id < estoqueRepositorio.findAll().size();id++){
+            Estoque estoque = estoqueRepositorio.findAll().get(id);
+
+            if(estoque.getProprietario().equals(usuario.getUsername())){
+                estoqueDoProprietario.add(estoque);
+            }
+        }
+        return estoqueDoProprietario;
     }
 
     /**
@@ -107,16 +120,16 @@ public class EstoqueBO {
      */
     public void subtrairQuantidadeDoProduto(Debito debito) {
 
-        Estoque estoque;
+        Estoque produto;
         List<Estoque> produtos =  estoqueRepositorio.findAll();
         for (int id = 0; id < estoqueRepositorio.findAll().size(); id++) {
-            estoque =  produtos.get(id);
+            produto =  produtos.get(id);
 
-            if (debito.getProdutoVendido().equals(estoque.getProduto())) {
+            if (debito.getProdutoVendido().equals(produto.getProduto()) && produto.getProprietario().equals(usuario.getUsername())) {
 
-                estoque.setProduto(estoque.getProduto());
-                estoque.setQuantidade(estoque.getQuantidade() - debito.getQuantidade());
-                estoqueRepositorio.save(estoque);
+                produto.setProduto(produto.getProduto());
+                produto.setQuantidade(produto.getQuantidade() - debito.getQuantidade());
+                estoqueRepositorio.save(produto);
             }
 
         }
@@ -127,18 +140,20 @@ public class EstoqueBO {
      * @param debito
      */
     public void aumentarQuantidadeDoProduto(Debito debito) {
-        Estoque estoque;
-        List<Estoque> produtos = new ArrayList<>();
+
+        Estoque produto;
+        List<Estoque> produtos;
+
         produtos =  estoqueRepositorio.findAll();
         for (int id = 0; id < estoqueRepositorio.findAll().size(); id++) {
-            estoque = produtos.get(id);
+            produto = produtos.get(id);
 
-             if (debito.getProdutoVendido().equals(estoque.getProduto())) {
+             if (debito.getProdutoVendido().equals(produto.getProduto()) && produto.getProprietario().equals(usuario.getUsername())) {
 
-                estoque.setProduto(estoque.getProduto());
-                estoque.setQuantidade(estoque.getQuantidade() + debito.getQuantidade());
+                produto.setProduto(produto.getProduto());
+                produto.setQuantidade(produto.getQuantidade() + debito.getQuantidade());
 
-                estoqueRepositorio.save(estoque);
+                estoqueRepositorio.save(produto);
             }
         }
     }

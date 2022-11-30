@@ -3,15 +3,14 @@ package com.soverteria.frimel.controllers;
 import com.soverteria.frimel.business.DebitoBO;
 import com.soverteria.frimel.business.EstoqueBO;
 import com.soverteria.frimel.modelos.dto.DebitoDTO;
-import com.soverteria.frimel.modelos.entity.Debito;
 import com.soverteria.frimel.modelos.entity.Estoque;
-import com.soverteria.frimel.repositorios.DebitoRepositorio;
+import com.soverteria.frimel.modelos.entity.Usuario;
+import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,7 +27,7 @@ public class DebitosController {
     @Autowired
      EstoqueBO estoqueBO;
 
-
+      Usuario usuario = JWTAutenticacao.usuario;
 
         @GetMapping
         public ResponseEntity<Object> pegarTodosOsDados()
@@ -72,15 +71,20 @@ public class DebitosController {
             try {
                 List<Estoque> produtos = estoqueBO.findAll();
 
-                for(int id = 0;id <= estoqueBO.findAll().size();id++) {
-                    Estoque estoque =produtos.get(id);
+               if(usuario.getUsername() != null) {
+                   for (int id = 0; id <= estoqueBO.findAll().size(); id++) {
+                       Estoque estoque = produtos.get(id);
 
-                    if (estoque.getProduto().equals(debitoDTO.getProdutoVendido()) && estoque != null)
-                        return ResponseEntity.status(HttpStatus.OK).body(debitoBO.save(debitoDTO,estoque));
+                       if (estoque.getProduto().equals(debitoDTO.getProdutoVendido()) && estoque != null)
+                           return ResponseEntity.status(HttpStatus.OK).body(debitoBO.save(debitoDTO, estoque));
 
-                    else
-                        System.out.println("não existe esse produto no estoque");
-                }
+                       else
+                           System.out.println("não existe esse produto no estoque");
+                   }
+
+               }
+               else
+                   return ResponseEntity.status(HttpStatus.FORBIDDEN).body("você não estar autorizado a usar esse serviço");
             }
 
             catch (NullPointerException e) {

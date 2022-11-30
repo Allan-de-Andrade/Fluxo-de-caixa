@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-
+    public static final Usuario usuario = new Usuario();
      public JWTAutenticacao(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
 
@@ -42,6 +42,8 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
 
         try {
             Usuario usuario = new ObjectMapper().readValue(request.getInputStream(),Usuario.class);
+            this.usuario.setUsername(usuario.getUsername());
+
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getSenha(), usuario.getAutoridade())
             );
@@ -61,11 +63,11 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
         Algorithm algorithm = Algorithm.HMAC256(senhaToken);
 
        String token_acesso = JWT.create().withSubject(usuarioDetails.getUsername()).withIssuer(request.getRequestURL().toString()).
-               withExpiresAt(new Date(System.currentTimeMillis() + 900_000)).
+               withExpiresAt(new Date(System.currentTimeMillis() + 180_000)).
                withClaim("autoridades",usuarioDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())).sign(algorithm);
 
         String token_refresh = JWT.create().withSubject(usuarioDetails.getUsername()).withIssuer(request.getRequestURL().toString()).
-                withExpiresAt(new Date(System.currentTimeMillis() + 180_000)).sign(algorithm);
+                withExpiresAt(new Date(System.currentTimeMillis() + 360_000)).sign(algorithm);
 
        response.setHeader("token_acesso", token_acesso);
        response.setHeader("token_refresh",token_refresh);

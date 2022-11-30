@@ -19,6 +19,9 @@ public class Estoque {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
+    private String proprietario;
+
     @Column(nullable = false,length = 70)
     private String produto;
 
@@ -45,6 +48,13 @@ public class Estoque {
         this.id = id;
     }
 
+    public String getProprietario(){
+        return proprietario;
+    }
+
+    public void setProprietario(String proprietario){
+     this.proprietario= proprietario;
+    }
     public String getProduto() {
         return produto;
     }
