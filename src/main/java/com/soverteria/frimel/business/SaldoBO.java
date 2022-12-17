@@ -44,12 +44,10 @@ public class SaldoBO {
         int idComparar = id + 1;
 
         do{
-
             Despesa despesa = todasAsDespesasOrdenadas.get(id);
             Despesa despesaComparada = todasAsDespesasOrdenadas.get(idComparar);
 
             if (despesa.getData().getMonth().equals(despesaComparada.getData().getMonth())) {
-
                 despesa.setValor(despesa.getValor().add(despesaComparada.getValor()));
                  despesasSomadas.add(despesa);
             }

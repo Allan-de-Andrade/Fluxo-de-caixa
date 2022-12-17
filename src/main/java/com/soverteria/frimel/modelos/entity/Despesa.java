@@ -22,13 +22,13 @@ public class Despesa implements Serializable {
 
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String proprietario;
+    private String proprietario = "";
 
     @Column(nullable = false,length = 70)
     private String descrição;
 
     @Column(nullable = false)
-    private BigDecimal valor;
+    private BigDecimal valor = new BigDecimal(0);
 
     @Column(nullable = false)
     private   LocalDateTime data;

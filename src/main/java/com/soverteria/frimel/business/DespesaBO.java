@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -76,42 +77,64 @@ public class DespesaBO {
     }
 
     List<Despesa>despesasOrdenadas;
-    public ArrayList<Despesa>addValueOfExpensesByMesAndYear(){
 
-        Sort ordenar = Sort.by("data").ascending();
-        despesasOrdenadas = despesaRepositorio.findAll(ordenar);
+    /**
+     * essa função serve para retornar uma lista de despesas somadas conforme o mês e o ano
+     * @return ArrayList<Despesa>
+     */
+    public ArrayList<Despesa>somarDespesas(){
+        List<Despesa> despesasOrdenadas = organizarListaDebitos();
         ArrayList<Despesa> despesasSomadas = new ArrayList<>();
-        Despesa despesa = despesasOrdenadas.get(0);
 
-        int i = 1;
-        do{
-            Despesa despesaSomar = despesasOrdenadas.get(i);
+        for(int index = 0;index < despesasOrdenadas.size();index++){
 
-                if(despesa.getData().getYear() == despesaSomar.getData().getYear() && despesa.getProprietario().equals(usuario.getUsername()) && despesaSomar.getProprietario().equals(usuario.getUsername())){
+            Despesa despesa= despesasOrdenadas.get(index);
+            Despesa despesaSomar = (index  +1 == despesasOrdenadas.size())?new Despesa():despesasOrdenadas.get(index++);
 
-                   if(despesa.getData().getMonth() == despesaSomar.getData().getMonth()) {
-                       despesa.setValor(despesa.getValor().add(despesaSomar.getValor()));
-                   }
-                   else if(despesa.getData().getMonth() != despesaSomar.getData().getMonth()) {
-                       despesasSomadas.add(despesa);
-                       despesa = despesaSomar;
-                   }
-                }
-                else if(despesa.getData().getYear() != despesaSomar.getData().getYear()) {
-                    despesasSomadas.add(despesa);
-                    despesa = despesaSomar;
+            if(!despesaSomar.getProprietario().equals("")) {
+                BigDecimal valorDebito = despesa.getValor();
 
-                }
-                if(i + 1 == despesasOrdenadas.size() && usuario.getUsername().equals(despesa.getProprietario())){
-                    despesasSomadas.add(despesa);
-                }
+                valorDebito = (despesa.getData().getMonth() == despesaSomar.getData().getMonth() && despesa.getData().getYear() == despesaSomar.getData().getYear()) ?
+                        valorDebito.add(despesaSomar.getValor()) : valorDebito;
 
-                 i++;
+                despesa.setValor(valorDebito);
+                despesasSomadas.add(despesa);
             }
-     while (i < despesasOrdenadas.size());
-         return  despesasSomadas;
+
+            else
+                despesasSomadas.add(despesa);
+        }
+        return despesasSomadas;
     }
 
+    /**
+     * cria uma lista de despesas organizada com referencia ao username do usuario
+     * @return List<Despesa>
+     */
+    private List<Despesa>organizarListaDebitos(){
+
+        Sort ordenar = Sort.by("data").ascending();
+
+        List<Despesa> debitosOrdenados;
+        despesasOrdenadas = despesaRepositorio.findAll(ordenar);
+        ArrayList<Despesa> despesasSomadas = new ArrayList<>();
+
+        int index = 0;
+
+
+        do {
+            Despesa despesa = despesasOrdenadas.get(index);
+
+            if(!despesa.getProprietario().equals(usuario.getUsername())){
+                despesasOrdenadas.remove(index);
+            }
+            else
+                index++;
+        }
+        while (index < despesasOrdenadas.size());
+
+        return despesasOrdenadas;
+    }
     /**
      * este metodo serve para atualizar uma despesa
      * @param id

@@ -60,7 +60,7 @@ public class DespesaController extends Despesa {
        public ResponseEntity<Object> despesasSomadas() {
 
            try {
-               return ResponseEntity.status(HttpStatus.OK).body(despesaBO.addValueOfExpensesByMesAndYear());
+               return ResponseEntity.status(HttpStatus.OK).body(despesaBO.somarDespesas());
            }
 
            catch (Exception e) {

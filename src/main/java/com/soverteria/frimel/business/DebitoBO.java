@@ -174,45 +174,62 @@ public class DebitoBO  {
     }
 
 
-    List<Debito> debitosOrdenados;
 
-    public ArrayList<Debito> addValueOfSalesByMesAndYear() {
+    /**
+     * essa função serve para retornar uma lista de debitos somados conforme o mês e o ano
+     * @return ArrayList<Debito>
+     */
+    public ArrayList<Debito> somarDebitos() {
 
+        List<Debito> debitosOrdenados = organizarListaDebitos();
+        ArrayList<Debito> debitosSomados = new ArrayList<>();
+
+        for(int index = 0;index < debitosOrdenados.size();index++){
+
+            Debito debito = debitosOrdenados.get(index);
+             Debito debitoSomar = (index  +1 == debitosOrdenados.size())?new Debito():debitosOrdenados.get(index++);
+
+             if(!debitoSomar.getProprietario().equals("")) {
+                 BigDecimal valorDebito = debito.getValor();
+
+                 valorDebito = (debito.getData().getMonth() == debitoSomar.getData().getMonth() && debito.getData().getYear() == debitoSomar.getData().getYear()) ?
+                         valorDebito.add(debitoSomar.getValor()) : valorDebito;
+
+                 debito.setValor(valorDebito);
+                 debitosSomados.add(debito);
+             }
+
+             else
+                 debitosSomados.add(debito);
+        }
+        return debitosSomados;
+    }
+    /**
+     * cria uma lista de debitos organizada com referencia ao username do usuario
+     * @return List<Despesa>
+     */
+    private List<Debito>organizarListaDebitos(){
 
         Sort ordenar = Sort.by("data").ascending();
+
+        List<Debito> debitosOrdenados;
         debitosOrdenados = debitoRepositorio.findAll(ordenar);
         ArrayList<Debito> debitosSomados = new ArrayList<>();
-        Debito debito= debitosOrdenados.get(0);
 
-        int i = 1;
-        do{
-            Debito debitoSomar = debitosOrdenados.get(i);
+        int index = 0;
 
-            if(debito.getData().getYear() == debitoSomar.getData().getYear() && debitoSomar.getProprietario().equals(usuario.getUsername()) && debito.getProprietario().equals(usuario.getUsername())){
 
-                if(debito.getData().getMonth() == debitoSomar.getData().getMonth()) {
-                    debito.setValor(debito.getValor().add(debitoSomar.getValor()));
-                }
-                else if(debito.getData().getMonth() != debitoSomar.getData().getMonth()) {
-                    debitosSomados.add(debito);
-                    debito = debitoSomar;
-                }
+        do {
+            Debito debito = debitosOrdenados.get(index);
+
+            if(!debito.getProprietario().equals(usuario.getUsername())){
+                debitosOrdenados.remove(index);
             }
-
-            if(debito.getData().getYear() != debitoSomar.getData().getYear() || debito.getData().getMonth() != debitoSomar.getData().getMonth()){
-                debitosSomados.add(debitoSomar);
-            }
-            if(debito.getProprietario().equals(debitoSomar.getProprietario())){
-                debitosSomados.add(debito);
-            }
-
-            if(i + 1 == debitosOrdenados.size() && debitoSomar.getProprietario().equals(usuario.getUsername())){
-                debitosSomados.add(debitoSomar);
-            }
-
-            i++;
+            else
+                index++;
         }
-        while (i < debitosOrdenados.size());
-        return  debitosSomados;
+        while (index < debitosOrdenados.size());
+
+        return debitosOrdenados;
     }
 }

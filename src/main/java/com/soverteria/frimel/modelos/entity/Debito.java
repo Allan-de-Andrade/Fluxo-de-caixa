@@ -20,7 +20,7 @@ public class Debito {
     private long id;
 
     @Column(nullable = false)
-    private String proprietario;
+    private String proprietario = "";
 
     @Column(nullable = false,length = 100)
     private String produtoVendido;
@@ -32,7 +32,7 @@ public class Debito {
     private LocalDateTime data;
 
     @Column(nullable = false)
-    private BigDecimal valor;
+    private BigDecimal valor = new BigDecimal(0);
 
 
     public Integer getQuantidade() {
