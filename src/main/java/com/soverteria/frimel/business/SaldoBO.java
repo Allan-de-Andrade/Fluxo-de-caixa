@@ -23,84 +23,10 @@ import java.util.*;
 public class SaldoBO {
 
     @Autowired
-   DespesaRepositorio despesaRepositorio;
+     DebitoBO debitoBO;
+
     @Autowired
-    DebitoRepositorio debitoRepositorio;
-
-
-    /**
-     * Este metodo serve para somar todas as Despesas e guardar em um ArrayList
-     * @return ArrayList</Despesas>
-     */
-    private ArrayList<Despesa> somarDespesas() {
-
-        ArrayList<Despesa> despesasSomadas = new ArrayList<Despesa>();
-        Sort ordenar = Sort.by("data").ascending();
-        ;
-        List<Despesa> todasAsDespesasOrdenadas = despesaRepositorio.findAll(ordenar);
-
-
-        int id = 0;
-        int idComparar = id + 1;
-
-        do{
-            Despesa despesa = todasAsDespesasOrdenadas.get(id);
-            Despesa despesaComparada = todasAsDespesasOrdenadas.get(idComparar);
-
-            if (despesa.getData().getMonth().equals(despesaComparada.getData().getMonth())) {
-                despesa.setValor(despesa.getValor().add(despesaComparada.getValor()));
-                 despesasSomadas.add(despesa);
-            }
-
-            else {
-                despesasSomadas.add(despesa);
-                id++;
-            }
-            idComparar++;
-        }
-         while (idComparar< despesaRepositorio.findAll().size());
-
-        return despesasSomadas;
-    }
-
-    /**
-     * Este metodo soma todos os Debitos e guarda em um ArrayList
-     * @return ArrayList<Debito>
-     */
-    private ArrayList<Debito> somarDebitos() {
-
-        ArrayList<Debito> debitosSomados = new ArrayList<Debito>();
-        Sort ordenar = Sort.by("data").ascending();
-        List<Debito> todosOsDebitosOrdenardos = debitoRepositorio.findAll(ordenar);
-
-        int id = 0;
-        int idComparar = id + 1;
-
-        do{
-
-            Debito debito = todosOsDebitosOrdenardos.get(id);
-            Debito debitoComparado = todosOsDebitosOrdenardos.get(idComparar);
-
-            if (debito.getData().getMonth().equals(debitoComparado.getData().getMonth())) {
-
-                debito.setValor(debito.getValor().add(debitoComparado.getValor()));
-
-                if (debitoRepositorio.findAll().contains(debito.getData().getMonth()) == false && debitoRepositorio.findAll().contains(debito.getData().getYear()) == false) {
-                    debitosSomados.add(debito);
-                }
-            }
-
-            else {
-                debitosSomados.add(debito);
-                id++;
-            }
-            idComparar++;
-        }
-
-        while (idComparar<debitoRepositorio.findAll().size());
-
-        return debitosSomados;
-    }
+    DespesaBO despesaBO;
 
     private ArrayList<Saldo> saldos = new ArrayList<Saldo>();
 
@@ -110,8 +36,8 @@ public class SaldoBO {
      */
     public ArrayList<Saldo> criarSaldo() {
 
-        ArrayList<Debito> debitosSomados = somarDebitos();
-        ArrayList<Despesa> despesasSomadas = somarDespesas();
+        ArrayList<Debito> debitosSomados = debitoBO.somarDebitos();
+        ArrayList<Despesa> despesasSomadas = despesaBO.somarDespesas();
 
         Debito debito;
         Despesa despesa;
@@ -134,10 +60,6 @@ public class SaldoBO {
                  }
 
                  else {
-                     saldo.setValor(debito.getValor());
-                     saldo.setDateTime(debito.getData());
-                     saldos.add(saldo);
-
                      saldo = new Saldo();
 
                      saldo.setValor(despesa.getValor().negate());
@@ -146,10 +68,10 @@ public class SaldoBO {
                  }
              }
          }
+
         else {
              atualizarSaldos(saldos, debitosSomados, despesasSomadas);
          }
-
         return saldos;
     }
 
@@ -178,8 +100,8 @@ public class SaldoBO {
      */
     private ArrayList<Saldo> atualizarSaldos(ArrayList<Saldo> saldos, ArrayList<Debito> debitosSomados, ArrayList<Despesa> despesasSomadas){
 
-        ArrayList<Debito> debitosSomadosAtual = somarDebitos();
-        ArrayList<Despesa> despesasSomadasAtual = somarDespesas();
+        ArrayList<Debito> debitosSomadosAtual = debitoBO.somarDebitos();
+        ArrayList<Despesa> despesasSomadasAtual = despesaBO.somarDespesas();
 
         Despesa despesaAtual;
         Debito debitoAtual;

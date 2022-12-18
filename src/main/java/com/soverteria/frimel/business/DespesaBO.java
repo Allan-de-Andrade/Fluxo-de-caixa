@@ -83,13 +83,13 @@ public class DespesaBO {
      * @return ArrayList<Despesa>
      */
     public ArrayList<Despesa>somarDespesas(){
-        List<Despesa> despesasOrdenadas = organizarListaDebitos();
+        List<Despesa> despesasOrdenadas = organizarListaDespesas();
         ArrayList<Despesa> despesasSomadas = new ArrayList<>();
 
         for(int index = 0;index < despesasOrdenadas.size();index++){
 
             Despesa despesa= despesasOrdenadas.get(index);
-            Despesa despesaSomar = (index  +1 == despesasOrdenadas.size())?new Despesa():despesasOrdenadas.get(index++);
+            Despesa despesaSomar = (index  +1 == despesasOrdenadas.size())?new Despesa():despesasOrdenadas.get(index + 1);
 
             if(!despesaSomar.getProprietario().equals("")) {
                 BigDecimal valorDebito = despesa.getValor();
@@ -111,16 +111,12 @@ public class DespesaBO {
      * cria uma lista de despesas organizada com referencia ao username do usuario
      * @return List<Despesa>
      */
-    private List<Despesa>organizarListaDebitos(){
+    private List<Despesa>organizarListaDespesas(){
 
         Sort ordenar = Sort.by("data").ascending();
 
-        List<Despesa> debitosOrdenados;
         despesasOrdenadas = despesaRepositorio.findAll(ordenar);
-        ArrayList<Despesa> despesasSomadas = new ArrayList<>();
-
         int index = 0;
-
 
         do {
             Despesa despesa = despesasOrdenadas.get(index);
