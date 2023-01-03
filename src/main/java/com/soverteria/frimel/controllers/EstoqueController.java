@@ -1,36 +1,36 @@
 package com.soverteria.frimel.controllers;
 
-import com.soverteria.frimel.business.EstoqueBO;
-import com.soverteria.frimel.modelos.dto.EstoqueDTO;
-import com.soverteria.frimel.modelos.entity.Estoque;
-import com.soverteria.frimel.repositorios.EstoqueRepositorio;
+import com.soverteria.frimel.business.ProdutoBO;
+import com.soverteria.frimel.modelos.dto.ProdutoDTO;
+import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 /**
- * Esta classe executa as funções da classe EstoqueBO
+ * Esta classe executa as funções da classe ProdutoBO
  */
 @RestController
-@CrossOrigin(origins = "http://192.168.1.197:4200",maxAge = 3600)
 @RequestMapping("/api/estoque")
 public class EstoqueController {
 
 
-    final EstoqueBO estoqueBO;
+    final ProdutoBO produtoBO;
 
-    public EstoqueController(EstoqueBO estoqueBO) {
-        this.estoqueBO = estoqueBO;
+    public EstoqueController(ProdutoBO produtoBO) {
+        this.produtoBO = produtoBO;
     }
 
     @GetMapping
-    public ResponseEntity<Object> pegarTodosOsDados() {
+    public ResponseEntity<Object> pegarTodosOsDados(@RequestParam int pagina,@RequestParam  int tamanho) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(estoqueBO.findAll());
+            Pageable page = PageRequest.of(pagina,tamanho);
+            return ResponseEntity.status(HttpStatus.OK).body(produtoBO.findAllComPaginacao(page, JWTAutenticacao.usuario.getUsername()));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -41,7 +41,7 @@ public class EstoqueController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<Object> pegarProdutoPeloId(@PathVariable Long id){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(estoqueBO.getOne(id));
+            return ResponseEntity.status(HttpStatus.OK).body(produtoBO.getOne(id));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -50,9 +50,9 @@ public class EstoqueController {
     }
 
     @PutMapping
-    public  ResponseEntity<Object > adicionarProduto(@RequestBody @Validated EstoqueDTO estoque) {
+    public  ResponseEntity<Object > adicionarProduto(@RequestBody @Validated ProdutoDTO estoque) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(estoqueBO.save(estoque));
+            return ResponseEntity.status(HttpStatus.OK).body(produtoBO.save(estoque));
         }
 
         catch (NullPointerException e){
@@ -66,9 +66,9 @@ public class EstoqueController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Object> modificarProduto(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO){
+    public ResponseEntity<Object> modificarProduto(@PathVariable Long id, @RequestBody ProdutoDTO produtoDTO){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(estoqueBO.update(id,estoqueDTO));
+            return ResponseEntity.status(HttpStatus.OK).body(produtoBO.update(id, produtoDTO));
         }
 
         catch (NullPointerException e){
@@ -84,7 +84,7 @@ public class EstoqueController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletarProduto(@PathVariable Long id){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(estoqueBO.deleteById(id));
+            return ResponseEntity.status(HttpStatus.OK).body(produtoBO.deleteById(id));
         }
         catch (Exception e){
             e.printStackTrace();

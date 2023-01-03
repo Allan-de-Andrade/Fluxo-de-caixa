@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * classe que gerencia todos os dados da Despesa
  */
 @Entity
-@Table(name = "despesatable")
+@Table(name = "despesas_table")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Despesa implements Serializable {
 

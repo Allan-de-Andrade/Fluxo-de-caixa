@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
  * classe que armazena os dados dos Debitos
  */
 @Entity
-@Table(name = "debitostable")
+@Table(name = "vendas_table")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Debito {
+public class Venda {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

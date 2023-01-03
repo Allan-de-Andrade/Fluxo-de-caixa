@@ -5,31 +5,36 @@ import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * esta classe armazena todos os dados do estoque
  */
 
 @Entity
-@Table(name="estoquetable")
+@Table(name="estoque_table")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Estoque {
+public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
-    private String proprietario;
+    @Column(nullable = false) //coluna que serve para identificar de qual usuario é esse produto
+    private String proprietario = "";
 
-    @Column(nullable = false,length = 70)
-    private String produto;
+    @Column(nullable = false,unique = true,length = 70)
+    private String nome;
 
     @Column(nullable = false)
     private Integer quantidade;
 
     @Column(nullable = false)
-    private BigDecimal preco;
+    private BigDecimal preco =  new BigDecimal(0.0);
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Insumo> insumosUsados = new ArrayList<>();
 
     public BigDecimal getPreco() {
         return preco;
@@ -55,12 +60,13 @@ public class Estoque {
     public void setProprietario(String proprietario){
      this.proprietario= proprietario;
     }
-    public String getProduto() {
-        return produto;
+
+    public String getNome() {
+        return nome;
     }
 
-    public void setProduto(String produto) {
-        this.produto = produto;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public Integer getQuantidade() {
@@ -69,5 +75,13 @@ public class Estoque {
 
     public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public List<Insumo> getInsumosUsados() {
+        return insumosUsados;
+    }
+
+    public void setInsumosUsados(List<Insumo> insumosUsados) {
+        this.insumosUsados = insumosUsados;
     }
 }

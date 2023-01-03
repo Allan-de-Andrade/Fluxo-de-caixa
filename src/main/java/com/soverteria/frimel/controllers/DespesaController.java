@@ -1,16 +1,15 @@
 package com.soverteria.frimel.controllers;
 
+import com.auth0.jwt.JWT;
 import com.soverteria.frimel.business.DespesaBO;
 import com.soverteria.frimel.modelos.entity.Despesa;
 import com.soverteria.frimel.modelos.dto.DespesaDTO;
+import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.constraints.Null;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * esta classe executa os metodos da classe DespesaBO
@@ -18,7 +17,6 @@ import java.util.List;
  */
 
 @RestController
-@CrossOrigin(origins = "http://192.168.1.197:4200/",maxAge = 3600)
 @RequestMapping("/api/despesas")
 public class DespesaController extends Despesa {
 
@@ -30,10 +28,11 @@ public class DespesaController extends Despesa {
         }
 
         @GetMapping
-        public ResponseEntity<Object> pegarTodosOsDados(){
+        public ResponseEntity<Object> listarDespesas(@RequestParam int pagina,@RequestParam int tamanho){
 
             try {
-                return ResponseEntity.status(HttpStatus.OK).body(despesaBO.findAll());
+                PageRequest page = PageRequest.of(pagina, tamanho);
+                return ResponseEntity.status(HttpStatus.OK).body(despesaBO.listarDespesas(page, JWTAutenticacao.usuario.getUsername()));
             }
 
             catch (Exception e) {

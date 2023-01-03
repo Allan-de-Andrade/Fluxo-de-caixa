@@ -1,16 +1,11 @@
 package com.soverteria.frimel.business;
 
 import com.soverteria.frimel.modelos.dto.Saldo;
-import com.soverteria.frimel.modelos.entity.Debito;
+import com.soverteria.frimel.modelos.entity.Venda;
 import com.soverteria.frimel.modelos.entity.Despesa;
-import com.soverteria.frimel.repositorios.DebitoRepositorio;
-import com.soverteria.frimel.repositorios.DespesaRepositorio;
-import net.bytebuddy.TypeCache;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,7 +18,7 @@ import java.util.*;
 public class SaldoBO {
 
     @Autowired
-     DebitoBO debitoBO;
+    VendaBO vendaBO;
 
     @Autowired
     DespesaBO despesaBO;
@@ -34,12 +29,12 @@ public class SaldoBO {
      * Este metodo cria a lista de Saldos
      * @return ArrayList<Saldo>
      */
-    public ArrayList<Saldo> criarSaldo() {
+    public List<Saldo> criarSaldo() {
 
-        ArrayList<Debito> debitosSomados = debitoBO.somarDebitos();
-        ArrayList<Despesa> despesasSomadas = despesaBO.somarDespesas();
+        List<Venda> debitosSomados = vendaBO.somarVendas();
+        List<Despesa> despesasSomadas = despesaBO.somarDespesas();
 
-        Debito debito;
+        Venda venda;
         Despesa despesa;
 
          if(saldos.size() == 0) {
@@ -47,14 +42,14 @@ public class SaldoBO {
              for (int id = 0; id < despesasSomadas.size() && id < debitosSomados.size(); id++) {
 
                  despesa = despesasSomadas.get(id);
-                 debito = debitosSomados.get(id);
+                 venda = debitosSomados.get(id);
 
                  Saldo saldo = new Saldo();
 
-                 if (debito.getData().getYear() == despesa.getData().getYear() && debito.getData().getMonth().equals(despesa.getData().getMonth())) {
+                 if (venda.getData().getYear() == despesa.getData().getYear() && venda.getData().getMonth().equals(despesa.getData().getMonth())) {
 
-                     saldo.setDateTime(criarLocalDateTime(debito, saldo));
-                     saldo.setValor(debito.getValor().subtract(despesa.getValor()));
+                     saldo.setDateTime(criarLocalDateTime(venda, saldo));
+                     saldo.setValor(venda.getValor().subtract(despesa.getValor()));
 
                      saldos.add(saldo);
                  }
@@ -77,13 +72,13 @@ public class SaldoBO {
 
     /**
      * metodo que cria o LocalDateTime do Saldo
-     * @param debito
+     * @param venda
      * @param saldo
      * @return LocalDateTime
      */
-    private LocalDateTime criarLocalDateTime(Debito debito, Saldo saldo) {
+    private LocalDateTime criarLocalDateTime(Venda venda, Saldo saldo) {
 
-        LocalDate dataDoSaldo = debito.getData().toLocalDate();
+        LocalDate dataDoSaldo = venda.getData().toLocalDate();
         LocalTime horarioCriado = LocalTime.now();
 
         LocalDateTime dateTime = dataDoSaldo.atTime(horarioCriado);
@@ -98,15 +93,15 @@ public class SaldoBO {
      * @param despesasSomadas
      * @return ArrayList<Saldo>
      */
-    private ArrayList<Saldo> atualizarSaldos(ArrayList<Saldo> saldos, ArrayList<Debito> debitosSomados, ArrayList<Despesa> despesasSomadas){
+    private List<Saldo> atualizarSaldos(List<Saldo> saldos, List<Venda> debitosSomados, List<Despesa> despesasSomadas){
 
-        ArrayList<Debito> debitosSomadosAtual = debitoBO.somarDebitos();
-        ArrayList<Despesa> despesasSomadasAtual = despesaBO.somarDespesas();
+        List<Venda> debitosSomadosAtual = vendaBO.somarVendas();
+        List<Despesa> despesasSomadasAtual = despesaBO.somarDespesas();
 
         Despesa despesaAtual;
-        Debito debitoAtual;
+        Venda vendaAtual;
 
-        Debito debitoAntes;
+        Venda debitoAntes;
         Despesa despesaAntes;
 
         for(int id = 0;id < debitosSomados.size() && id < despesasSomadas.size();id++){
@@ -115,21 +110,21 @@ public class SaldoBO {
             despesaAntes = despesasSomadas.get(id);
 
             debitoAntes = debitosSomados.get(id);
-            debitoAtual = debitosSomadosAtual.get(id);
+            vendaAtual = debitosSomadosAtual.get(id);
 
             Saldo saldo = saldos.get(id);
 
-            if(debitoAntes != debitoAtual && despesaAntes != despesaAtual)
+            if(debitoAntes != vendaAtual && despesaAntes != despesaAtual)
             {
-                if (debitoAtual.getData().getYear() == despesaAtual.getData().getYear() && debitoAtual.getData().getMonth().equals(despesaAtual.getData().getMonth())) {
+                if (vendaAtual.getData().getYear() == despesaAtual.getData().getYear() && vendaAtual.getData().getMonth().equals(despesaAtual.getData().getMonth())) {
 
-                    saldo.setDateTime(criarLocalDateTime(debitoAtual, saldo));
-                    saldo.setValor(debitoAtual.getValor().subtract(despesaAtual.getValor()));
+                    saldo.setDateTime(criarLocalDateTime(vendaAtual, saldo));
+                    saldo.setValor(vendaAtual.getValor().subtract(despesaAtual.getValor()));
                 }
 
                 else {
-                    saldo.setValor(debitoAtual.getValor());
-                    saldo.setDateTime(debitoAtual.getData());
+                    saldo.setValor(vendaAtual.getValor());
+                    saldo.setDateTime(vendaAtual.getData());
 
                     saldo = saldos.get(id + 1);
 
@@ -138,7 +133,6 @@ public class SaldoBO {
                 }
             }
         }
-
         return  saldos;
     }
 

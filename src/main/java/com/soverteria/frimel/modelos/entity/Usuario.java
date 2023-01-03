@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 @Entity
-@Table(name = "UsuarioTable", uniqueConstraints = {
+@Table(name = "usuario_table", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"username"}),
         @UniqueConstraint(columnNames = {"senha"})
 })

@@ -54,7 +54,7 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
         return null;
     }
 
-    public static final String senhaToken = "8a42cf2b-b458-4c6e-819d-86df95e968ac";
+    public static  final String senhaToken = "8a42cf2b-b458-4c6e-819d-86df95e968ac";
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
@@ -63,11 +63,11 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
         Algorithm algorithm = Algorithm.HMAC256(senhaToken);
 
        String token_acesso = JWT.create().withSubject(usuarioDetails.getUsername()).withIssuer(request.getRequestURL().toString()).
-               withExpiresAt(new Date(System.currentTimeMillis() + 180_000)).
+               withExpiresAt(new Date(System.currentTimeMillis() + 1800_000)).
                withClaim("autoridades",usuarioDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())).sign(algorithm);
 
         String token_refresh = JWT.create().withSubject(usuarioDetails.getUsername()).withIssuer(request.getRequestURL().toString()).
-                withExpiresAt(new Date(System.currentTimeMillis() + 360_000)).sign(algorithm);
+                withExpiresAt(new Date(System.currentTimeMillis() + 3600_000)).sign(algorithm);
 
        response.setHeader("token_acesso", token_acesso);
        response.setHeader("token_refresh",token_refresh);

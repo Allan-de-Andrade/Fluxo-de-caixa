@@ -6,6 +6,9 @@ import com.soverteria.frimel.modelos.entity.Usuario;
 import com.soverteria.frimel.repositorios.DespesaRepositorio;
 import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,20 +33,11 @@ public class DespesaBO {
 
     Usuario usuario = JWTAutenticacao.usuario;
     /**
-     * este metodo serve para mostrar todas as despesas
+     * este metodo serve para mostrar todas as despesas do usuario
      * @return
      */
-    public List<Despesa> findAll(){
-        List<Despesa> despesasDoProprietario = new ArrayList<>();
-
-        for(int id  = 0;id < despesaRepositorio.findAll().size();id++){
-            Despesa despesa = despesaRepositorio.findAll().get(id);
-
-            if(despesa.getProprietario().equals(usuario.getUsername())){
-                despesasDoProprietario.add(despesa);
-            }
-        }
-        return despesasDoProprietario;
+    public Page<Despesa> listarDespesas(Pageable pageable,String proprietario){
+        return despesaRepositorio.findByProprietario(pageable,proprietario);
     }
 
     /**
@@ -76,20 +70,21 @@ public class DespesaBO {
         return null;
     }
 
-    List<Despesa>despesasOrdenadas;
 
     /**
      * essa função serve para retornar uma lista de despesas somadas conforme o mês e o ano
-     * @return ArrayList<Despesa>
+     * @return Page<Despesa>
      */
-    public ArrayList<Despesa>somarDespesas(){
-        List<Despesa> despesasOrdenadas = organizarListaDespesas();
+    public List<Despesa>somarDespesas(){
+        List<Despesa> despesasOrdenadas = despesaRepositorio.findByProprietario(JWTAutenticacao.usuario.getUsername());
         ArrayList<Despesa> despesasSomadas = new ArrayList<>();
 
         for(int index = 0;index < despesasOrdenadas.size();index++){
 
+            int indexRapido = index + 1;
+
             Despesa despesa= despesasOrdenadas.get(index);
-            Despesa despesaSomar = (index  +1 == despesasOrdenadas.size())?new Despesa():despesasOrdenadas.get(index + 1);
+            Despesa despesaSomar = (indexRapido == despesasOrdenadas.size())?new Despesa():despesasOrdenadas.get(indexRapido);
 
             if(!despesaSomar.getProprietario().equals("")) {
                 BigDecimal valorDebito = despesa.getValor();
@@ -107,30 +102,6 @@ public class DespesaBO {
         return despesasSomadas;
     }
 
-    /**
-     * cria uma lista de despesas organizada com referencia ao username do usuario
-     * @return List<Despesa>
-     */
-    private List<Despesa>organizarListaDespesas(){
-
-        Sort ordenar = Sort.by("data").ascending();
-
-        despesasOrdenadas = despesaRepositorio.findAll(ordenar);
-        int index = 0;
-
-        do {
-            Despesa despesa = despesasOrdenadas.get(index);
-
-            if(!despesa.getProprietario().equals(usuario.getUsername())){
-                despesasOrdenadas.remove(index);
-            }
-            else
-                index++;
-        }
-        while (index < despesasOrdenadas.size());
-
-        return despesasOrdenadas;
-    }
     /**
      * este metodo serve para atualizar uma despesa
      * @param id
