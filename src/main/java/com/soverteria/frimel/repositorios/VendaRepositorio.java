@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ * Repositorio gerencia os dados de vendas do usuario.
+ */
 @Repository
 public interface VendaRepositorio extends JpaRepository<Venda,Long> {
 

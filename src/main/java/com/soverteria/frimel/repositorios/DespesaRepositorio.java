@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ * Este repositorio define os dados de despesas do usuario.
+ */
 @Repository
 public interface DespesaRepositorio  extends JpaRepository<Despesa,Long> {
     Page<Despesa> findByProprietario(org.springframework.data.domain.Pageable pageable, String proprietario);

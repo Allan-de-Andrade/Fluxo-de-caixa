@@ -3,7 +3,7 @@ package com.soverteria.frimel.modelos.dto;
 import java.math.BigDecimal;
 
 /**
- * esta classe serve para receber os dados da Despesa dado pelo usuario
+ * Classe que recebe os dados da despesa e os define para a clase Despesa.
  */
 public class DespesaDTO {
 

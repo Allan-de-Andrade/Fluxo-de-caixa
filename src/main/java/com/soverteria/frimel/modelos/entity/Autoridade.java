@@ -1,10 +1,12 @@
 package com.soverteria.frimel.modelos.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
+/**
+ * Classe que define os dados de autoridade dado ao usuario
+ */
 @Entity
 @Table(name = "autoridade_table")
 public class Autoridade implements GrantedAuthority {

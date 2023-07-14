@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * essa classe gerencia os produtos do estoque da empresa
+ * Esta classe é um serviço para produtos
  */
 @Service
 public class ProdutoBO {
@@ -29,7 +29,11 @@ public class ProdutoBO {
         this.vendaRepositorio = vendaRepositorio;
     }
 
+    /**
+     * Variavel usado para definir o proprietario deste produto
+     */
     Usuario usuario = JWTAutenticacao.usuario;
+
     /**
      * esse metodo serve para salvar um novo produto no estoque
      *
@@ -52,6 +56,12 @@ public class ProdutoBO {
         return null;
     }
 
+    /**
+     * metodo usado para definir o preço dos produtos com os insumos
+     * @param produto
+     * @param insumos
+     * @return
+     */
     public BigDecimal definirValorDoProduto(Produto produto,List<Insumo>insumos){
 
       for(int index =0;index < insumos.size();index++){

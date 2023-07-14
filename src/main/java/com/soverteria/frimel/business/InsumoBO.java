@@ -6,11 +6,8 @@ import com.soverteria.frimel.modelos.entity.Insumo;
 import com.soverteria.frimel.repositorios.ProdutoRepositorio;
 import com.soverteria.frimel.repositorios.InsumoRepositorio;
 import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

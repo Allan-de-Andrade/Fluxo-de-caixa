@@ -2,6 +2,9 @@ package com.soverteria.frimel.modelos.dto;
 
 import java.math.BigDecimal;
 
+/**
+ * Classe que recebe os dados do insumo e os define para a clase Insumo.
+ */
 public class InsumoDTO {
 
     private String nome;

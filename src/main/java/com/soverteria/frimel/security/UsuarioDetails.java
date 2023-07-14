@@ -1,12 +1,14 @@
 package com.soverteria.frimel.security;
 
-import com.soverteria.frimel.modelos.entity.Autoridade;
 import com.soverteria.frimel.modelos.entity.Usuario;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * Classe que define os dados de segurança do usuario
+ */
 public class UsuarioDetails implements UserDetails {
 
     Usuario usuario;

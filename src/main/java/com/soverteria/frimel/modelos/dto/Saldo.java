@@ -3,6 +3,9 @@ package com.soverteria.frimel.modelos.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Classe que armazena  os dados do saldo pertecente ao usuario no referente dia/hora/minuto dele.
+ */
 public class Saldo {
 
     private BigDecimal valor;

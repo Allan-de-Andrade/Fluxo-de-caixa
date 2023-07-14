@@ -1,8 +1,5 @@
 package com.soverteria.frimel.modelos.dto;
 
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 /**
  * esta classe serve para receber os dados do Venda dado pelo usuario
