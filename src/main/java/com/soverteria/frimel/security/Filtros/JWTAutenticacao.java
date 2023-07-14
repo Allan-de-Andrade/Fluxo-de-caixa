@@ -2,14 +2,9 @@ package com.soverteria.frimel.security.Filtros;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soverteria.frimel.business.UsuarioBO;
-import com.soverteria.frimel.modelos.entity.Autoridade;
 import com.soverteria.frimel.modelos.entity.Usuario;
-import com.soverteria.frimel.repositorios.UsuarioRepositorio;
 import com.soverteria.frimel.security.UsuarioDetails;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,11 +17,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+/**
+ * Classe que autentica o usuario e envia um token de acesso
+ */
 public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -37,6 +33,13 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
         setFilterProcessesUrl("/api/usuario/login");
     }
 
+    /**
+     * Metodo que autentica o usuario.
+     * @param request
+     * @param response
+     * @return
+     * @throws AuthenticationException
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
@@ -56,6 +59,16 @@ public class JWTAutenticacao extends UsernamePasswordAuthenticationFilter {
 
     public static  final String senhaToken = "8a42cf2b-b458-4c6e-819d-86df95e968ac";
 
+
+    /**
+     * metodo que envia o token de acesso ao usuario.
+     * @param request
+     * @param response
+     * @param chain
+     * @param authResult
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 

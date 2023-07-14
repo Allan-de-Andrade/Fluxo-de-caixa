@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Este repositorio gerencia os dados dos produtos referente aos usuarios.
+ */
 @Repository
 public interface ProdutoRepositorio extends JpaRepository<Produto,Long> {
     Page<Produto> findByProprietario(Pageable pageable, String proprietario);

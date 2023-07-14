@@ -20,12 +20,24 @@ import java.util.Collection;
 
 import static java.util.Arrays.stream;
 
+/**
+ * Classe que valida o token JWT para enviar as informações requeridas do usuario.
+ */
 public class ValidarJWT extends BasicAuthenticationFilter {
 
     public ValidarJWT(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
 
+
+    /**
+     * Metodo que recebe o token e manda fazer a autenticação do token
+     * @param request
+     * @param response
+     * @param chain
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
@@ -49,6 +61,11 @@ public class ValidarJWT extends BasicAuthenticationFilter {
         }
     }
 
+    /**
+     * autentica o token do usuario
+     * @param token
+     * @return
+     */
     private UsernamePasswordAuthenticationToken pegarAutenticacaoToken(String token) {
 
         try {

@@ -1,7 +1,5 @@
 package com.soverteria.frimel.modelos.dto;
 
-import java.util.Collection;
-
 public class UsuarioDTO {
 
     private long id;

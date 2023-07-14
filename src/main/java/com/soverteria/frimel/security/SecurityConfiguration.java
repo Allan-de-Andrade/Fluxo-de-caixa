@@ -15,11 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Arrays;
 
 /**
  * Classe de configuração de Segurança
@@ -27,18 +24,28 @@ import java.util.Arrays;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter  implements WebMvcConfigurer {
     private final UserDetailsServiceImpl userDetailsService;
 
     public SecurityConfiguration(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * metodo para reconhecer o usuario requerido.
+     * @param auth
+     * @throws Exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(criptografar());
     }
 
+    /**
+     * metodo que aplica toda a segurança da aplicação.
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -48,11 +55,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
      }
 
+    /**
+     * metodo utilizado pra retirar a seguraça na hora do cadastro
+     * @param web
+     * @throws Exception
+     */
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.PUT,"/api/usuario/cadastro","/api/usuario/recarregarToken");
     }
 
+    /**
+     * metodo de criptografia dos dados
+     * @return
+     */
     @Bean
     public PasswordEncoder criptografar(){
        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -62,18 +78,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception{
         return super.authenticationManagerBean();
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST"));
-        source.registerCorsConfiguration("/**",corsConfiguration);
-
-        return source;
     }
 }

@@ -2,14 +2,16 @@ package com.soverteria.frimel.modelos.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+
+
+/**
+ * Classe que define os dados do usuario
+ */
 
 @Entity
 @Table(name = "usuario_table", uniqueConstraints = {
