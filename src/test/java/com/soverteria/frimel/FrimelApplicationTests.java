@@ -1,4 +1,4 @@
-package com.soverteria.frimel;
+package com.allan.fluxo_de_caixa;
 
 
 import org.springframework.boot.test.context.SpringBootTest;

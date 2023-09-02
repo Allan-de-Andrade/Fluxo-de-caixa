@@ -1,16 +1,14 @@
-package com.soverteria.frimel;
+package com.allan.fluxo_de_caixa;
 
-import com.soverteria.frimel.business.ProdutoBO;
-import com.soverteria.frimel.business.VendaBO;
-import com.soverteria.frimel.modelos.dto.InsumoDTO;
-import com.soverteria.frimel.modelos.entity.Insumo;
-import com.soverteria.frimel.modelos.entity.Produto;
-import com.soverteria.frimel.repositorios.ProdutoRepositorio;
-import com.soverteria.frimel.repositorios.VendaRepositorio;
+import com.allan.fluxo_de_caixa.business.ProdutoBO;
+import com.allan.fluxo_de_caixa.modelos.dto.InsumoDTO;
+import com.allan.fluxo_de_caixa.modelos.entity.Insumo;
+import com.allan.fluxo_de_caixa.modelos.entity.Produto;
+import com.allan.fluxo_de_caixa.repositorios.ProdutoRepositorio;
+import com.allan.fluxo_de_caixa.repositorios.VendaRepositorio;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,11 +16,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.BeanUtils;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 

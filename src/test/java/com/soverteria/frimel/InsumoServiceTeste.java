@@ -1,17 +1,15 @@
-package com.soverteria.frimel;
+package com.allan.fluxo_de_caixa;
 
-import com.soverteria.frimel.business.InsumoBO;
-import com.soverteria.frimel.business.ProdutoBO;
-import com.soverteria.frimel.modelos.dto.InsumoDTO;
-import com.soverteria.frimel.modelos.dto.ProdutoDTO;
-import com.soverteria.frimel.modelos.entity.Insumo;
-import com.soverteria.frimel.modelos.entity.Produto;
-import com.soverteria.frimel.repositorios.VendaRepositorio;
-import com.soverteria.frimel.repositorios.InsumoRepositorio;
-import com.soverteria.frimel.repositorios.ProdutoRepositorio;
+import com.allan.fluxo_de_caixa.business.InsumoBO;
+import com.allan.fluxo_de_caixa.modelos.dto.InsumoDTO;
+import com.allan.fluxo_de_caixa.modelos.dto.ProdutoDTO;
+import com.allan.fluxo_de_caixa.modelos.entity.Insumo;
+import com.allan.fluxo_de_caixa.modelos.entity.Produto;
+import com.allan.fluxo_de_caixa.repositorios.InsumoRepositorio;
+import com.allan.fluxo_de_caixa.repositorios.ProdutoRepositorio;
 
 
-import com.soverteria.frimel.security.Filtros.JWTAutenticacao;
+import com.allan.fluxo_de_caixa.security.Filtros.JWTAutenticacao;
 import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
