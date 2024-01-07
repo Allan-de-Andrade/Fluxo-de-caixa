@@ -8,8 +8,8 @@
         <version>2.1.0.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.soverteria</groupId>
-    <artifactId>frimel</artifactId>
+    <groupId>com.allan</groupId>
+    <artifactId>fluxo-de-caixa</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>frimel</name>
     <description>Demo project for Spring Boot</description>
