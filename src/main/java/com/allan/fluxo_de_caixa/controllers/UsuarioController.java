@@ -45,7 +45,7 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getuserbyid/{id}")
     public ResponseEntity<Object> pegarUsuarioPeloId(@PathVariable Long id){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(usuarioBO.pegarUsuarioPeloId(id));
@@ -72,7 +72,7 @@ public class UsuarioController {
         }
     }
 
-    @PostMapping(value="/{id}")
+    @PostMapping(value="/editar/{id}")
     public ResponseEntity<Object> editarUsuario(@RequestBody UsuarioDTO usuarioDTO,@PathVariable long id){
 
         try {
@@ -84,7 +84,7 @@ public class UsuarioController {
         }
     }
 
-    @DeleteMapping(value="/{id}")
+    @DeleteMapping(value="/deletar/{id}")
     public ResponseEntity<Object> deletarUsuario(@PathVariable Long id){
 
         try {

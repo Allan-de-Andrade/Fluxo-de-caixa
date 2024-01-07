@@ -51,6 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter  impleme
         http.csrf().disable();
         http.cors().disable();
 
+        http.authorizeRequests().antMatchers("/api/usuario/cadastro").permitAll();
         http.authorizeRequests().anyRequest().authenticated().and().addFilter(new JWTAutenticacao(authenticationManager())).addFilter(new ValidarJWT(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
      }
